@@ -1,0 +1,7 @@
+FROM onsdigital/dp-concourse-tools-ubuntu
+
+WORKDIR /app/
+
+COPY dp-frontend-articles-controller .
+
+CMD ./dp-frontend-articles-controller
