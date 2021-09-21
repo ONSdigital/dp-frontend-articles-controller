@@ -26,20 +26,19 @@ func setStatusCode(req *http.Request, w http.ResponseWriter, err error) {
 	w.WriteHeader(status)
 }
 
-// TODO: remove hello world example handler
-// HelloWorld Handler
-func HelloWorld(cfg config.Config) http.HandlerFunc {
+// Bulletin handles bulletin requests
+func Bulletin(cfg config.Config) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		helloWorld(w, req, cfg)
+		bulletin(w, req, cfg)
 	}
 }
 
-func helloWorld(w http.ResponseWriter, req *http.Request, cfg config.Config) {
+func bulletin(w http.ResponseWriter, req *http.Request, cfg config.Config) {
 	ctx := req.Context()
-	greetingsModel := mapper.HelloModel{Greeting: "Hello", Who: "World"}
-	m := mapper.HelloWorld(ctx, greetingsModel, cfg)
+	bulletin := mapper.Bulletin{Name: req.URL.EscapedPath()}
+	model := mapper.Blank(ctx, bulletin, cfg)
 
-	b, err := json.Marshal(m)
+	b, err := json.Marshal(model)
 	if err != nil {
 		setStatusCode(req, w, err)
 		return

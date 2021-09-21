@@ -2,27 +2,22 @@ package mapper
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 )
 
-// TODO: remove hello world example mapper and models
-
-type HelloModel struct {
-	Greeting string `json:"greeting"`
-	Who      string `json:"who"`
+type Bulletin struct {
+	// TODO define
+	Name string `json:"name"`
 }
 
-type HelloWorldModel struct {
-	HelloWho string `json:"hello-who"`
+type BulletinModel struct {
+	// TODO define
+	Name string `json:"model-name"`
 }
 
-func HelloWorld(ctx context.Context, hm HelloModel, cfg config.Config) HelloWorldModel {
-	var hwm HelloWorldModel
-	hwm.HelloWho = fmt.Sprintf("%s %s", hm.Greeting, hm.Who)
-	if cfg.HelloWorldEmphasise {
-		hwm.HelloWho += "!"
-	}
-	return hwm
+func Blank(ctx context.Context, bulletin Bulletin, cfg config.Config) BulletinModel {
+	var model BulletinModel
+	model.Name = bulletin.Name
+	return model
 }
