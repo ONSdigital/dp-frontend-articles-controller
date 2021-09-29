@@ -3,6 +3,7 @@ package mapper
 import (
 	"context"
 	"fmt"
+
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 )
 
