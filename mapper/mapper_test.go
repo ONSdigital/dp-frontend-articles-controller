@@ -9,25 +9,22 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-// TODO: remove example test case
 func TestUnitMapper(t *testing.T) {
 	ctx := context.Background()
 
-	Convey("test mapper adds emphasis to hello world string when set in config", t, func() {
+	Convey("Blank maps correctly", t, func() {
 		cfg := config.Config{
 			BindAddr:                   "1234",
 			GracefulShutdownTimeout:    0,
 			HealthCheckInterval:        0,
 			HealthCheckCriticalTimeout: 0,
-			HelloWorldEmphasise:        true,
 		}
 
-		hm := HelloModel{
-			Greeting: "Hello",
-			Who:      "World",
+		bulletin := Bulletin{
+			Name: "test",
 		}
 
-		hw := HelloWorld(ctx, hm, cfg)
-		So(hw.HelloWho, ShouldEqual, "Hello World!")
+		model := Blank(ctx, bulletin, cfg)
+		So(model.Name, ShouldEqual, bulletin.Name)
 	})
 }
