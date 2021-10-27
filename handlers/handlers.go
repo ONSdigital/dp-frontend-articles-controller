@@ -1,19 +1,12 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 	"github.com/ONSdigital/dp-frontend-articles-controller/mapper"
 	"github.com/ONSdigital/log.go/v2/log"
 )
-
-// ClientError is an interface that can be used to retrieve the status code if a client has errored
-type ClientError interface {
-	Error() string
-	Code() int
-}
 
 func setStatusCode(req *http.Request, w http.ResponseWriter, err error) {
 	status := http.StatusInternalServerError
@@ -27,28 +20,22 @@ func setStatusCode(req *http.Request, w http.ResponseWriter, err error) {
 }
 
 // Bulletin handles bulletin requests
-func Bulletin(cfg config.Config) http.HandlerFunc {
+func Bulletin(cfg config.Config, rc RenderClient, zc ZebedeeClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		bulletin(w, req, cfg)
+		bulletin(w, req, rc, zc, cfg)
 	}
 }
 
-func bulletin(w http.ResponseWriter, req *http.Request, cfg config.Config) {
+func bulletin(w http.ResponseWriter, req *http.Request, rc RenderClient, zc ZebedeeClient, cfg config.Config) {
 	ctx := req.Context()
-	bulletin := mapper.Bulletin{Name: req.URL.EscapedPath()}
-	model := mapper.Blank(ctx, bulletin, cfg)
 
-	b, err := json.Marshal(model)
+	bulletin, err := zc.GetBulletin(ctx, "", "en", req.URL.EscapedPath())
 	if err != nil {
 		setStatusCode(req, w, err)
 		return
 	}
 
-	_, err = w.Write(b)
-	if err != nil {
-		log.Error(ctx, "failed to write bytes for http response", err)
-		setStatusCode(req, w, err)
-		return
-	}
-	return
+	basePage := rc.NewBasePageModel()
+	model := mapper.CreateBulletinModel(basePage, bulletin)
+	rc.BuildPage(w, model, "bulletin")
 }

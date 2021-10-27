@@ -4,8 +4,11 @@ import (
 	"context"
 	"errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
+	"github.com/ONSdigital/dp-frontend-articles-controller/assets"
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 	"github.com/ONSdigital/dp-frontend-articles-controller/routes"
+	render "github.com/ONSdigital/dp-renderer"
 	"github.com/ONSdigital/log.go/v2/log"
 	"github.com/gorilla/mux"
 )
@@ -39,8 +42,14 @@ func (svc *Service) Init(ctx context.Context, cfg *config.Config, serviceList *E
 	svc.Config = cfg
 	svc.ServiceList = serviceList
 
+	// Get health client for api router
+	routerHealthClient := serviceList.GetHealthClient("api-router", cfg.APIRouterURL)
+
 	// Initialise clients
-	clients := routes.Clients{}
+	clients := routes.Clients{
+		Render:  render.NewWithDefaultClient(assets.Asset, assets.AssetNames, cfg.PatternLibraryAssetsPath, cfg.SiteDomain),
+		Zebedee: zebedee.NewWithHealthClient(routerHealthClient),
+	}
 
 	// Get healthcheck with checkers
 	svc.HealthCheck, err = serviceList.GetHealthCheck(cfg, BuildTime, GitCommit, Version)
@@ -124,7 +133,10 @@ func (svc *Service) Close(ctx context.Context) error {
 func (svc *Service) registerCheckers(ctx context.Context, c routes.Clients) (err error) {
 	hasErrors := false
 
-	// TODO: Add health checks here
+	if err = svc.HealthCheck.AddCheck("Zebedee", c.Zebedee.Checker); err != nil {
+		hasErrors = true
+		log.Error(ctx, "failed to add Zebedee checker", err)
+	}
 
 	if hasErrors {
 		return errors.New("Error(s) registering checkers for healthcheck")
