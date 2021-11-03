@@ -20,6 +20,7 @@ func TestUnitMapper(t *testing.T) {
 				Edition:           "2021",
 				Keywords:          []string{"energy", "waste"},
 				MetaDescription:   "description",
+				Summary:           "summary",
 				NationalStatistic: true,
 				Contact: zebedee.Contact{
 					Name:      "contact name",
@@ -181,6 +182,7 @@ func TestUnitMapper(t *testing.T) {
 				So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
 				So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
 				So(model.Metadata.Keywords, ShouldResemble, bulletin.Description.Keywords)
+				So(model.Summary, ShouldEqual, bulletin.Description.Summary)
 				So(model.Type, ShouldEqual, bulletin.Type)
 				So(model.URI, ShouldEqual, bulletin.URI)
 				So(model.ParentPath, ShouldEqual, "the/bulletin/uri/path")

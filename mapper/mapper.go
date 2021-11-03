@@ -10,6 +10,7 @@ import (
 
 type BulletinModel struct {
 	coreModel.Page
+	Summary           string    `json:"summary"`
 	Sections          []Section `json:"sections"`
 	Accordion         []Section `json:"accordion"`
 	Charts            []Figure  `json:"charts"`
@@ -72,6 +73,7 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin zebedee.Bulletin, bcs
 		Keywords:    bulletin.Description.Keywords,
 	}
 	model.URI = bulletin.URI
+	model.Summary = bulletin.Description.Summary
 	model.DatasetId = bulletin.Description.DatasetID
 	model.NationalStatistic = bulletin.Description.NationalStatistic
 	model.Edition = bulletin.Description.Edition

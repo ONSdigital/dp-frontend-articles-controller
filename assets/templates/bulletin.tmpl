@@ -26,7 +26,7 @@
                         {{ .Metadata.Title }}{{ if .Edition }}: {{ .Edition }}{{ end }}
                     </h1>
                     <p class="page-bulletins--Summary margin-right-md--2 margin-bottom--3 padding-bottom--0 padding-top--0">
-                        {{ .Metadata.Description }}
+                        {{ .Summary }}
                     </p>
                 </div>
             </div>
@@ -50,12 +50,12 @@
             {{ else }}
                 <div class="col alert-release-banner alert-release-banner__not-latest">
                     <p class="alert-release-banner__title">{{ localise "ThisIsNotLatestRelease" $lang 1 }}.
-                        <a class="alert-release-banner__link" href="{{ .ParentPath }}">{{ localise "ViewLatestRelease" $lang 1 }}</a>
+                        <a class="alert-release-banner__link" href="{{ .ParentPath }}/latest">{{ localise "ViewLatestRelease" $lang 1 }}</a>
                     </p>
                 </div>
             {{ end }}
 
-            {{ if or .Versions .Alerts}}
+            {{ if or .Versions .Alerts }}
                 <div class="col show-hide show-hide--dark margin-top--4 js-show-hide">
                     <div class="alert-bulletins--border">
                         <div class="js-show-hide__title">
