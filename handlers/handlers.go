@@ -29,13 +29,22 @@ func Bulletin(cfg config.Config, rc RenderClient, zc ZebedeeClient) http.Handler
 func bulletin(w http.ResponseWriter, req *http.Request, rc RenderClient, zc ZebedeeClient, cfg config.Config) {
 	ctx := req.Context()
 
-	bulletin, err := zc.GetBulletin(ctx, "", "en", req.URL.EscapedPath())
+	lang := "en"
+	userAccessToken := ""
+
+	bulletin, err := zc.GetBulletin(ctx, userAccessToken, lang, req.URL.EscapedPath())
+	if err != nil {
+		setStatusCode(req, w, err)
+		return
+	}
+
+	breadcrumbs, err := zc.GetBreadcrumb(ctx, userAccessToken, "", lang, bulletin.URI)
 	if err != nil {
 		setStatusCode(req, w, err)
 		return
 	}
 
 	basePage := rc.NewBasePageModel()
-	model := mapper.CreateBulletinModel(basePage, bulletin)
+	model := mapper.CreateBulletinModel(basePage, bulletin, breadcrumbs)
 	rc.BuildPage(w, model, "bulletin")
 }

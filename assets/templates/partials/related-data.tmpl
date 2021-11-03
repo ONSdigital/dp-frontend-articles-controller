@@ -1,0 +1,7 @@
+{{ if .RelatedData }}
+    <div class="margin-bottom-sm--2 margin-bottom-md--2 print--hide">
+        <a class="btn btn--primary btn--full-width" href="{{ concatenateStrings .URI "/relateddata" }}" data-gtm-title="" data-gtm-type="related-data">
+            {{ localise "ViewAllDataUsedInThisStatisticalBulletin" .Language 1 }}
+        </a>
+    </div>
+{{ end }}

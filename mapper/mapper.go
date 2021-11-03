@@ -1,13 +1,15 @@
 package mapper
 
 import (
+	"sort"
+	"strings"
+
 	"github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
-	"github.com/ONSdigital/dp-renderer/model"
 	coreModel "github.com/ONSdigital/dp-renderer/model"
 )
 
 type BulletinModel struct {
-	model.Page
+	coreModel.Page
 	Sections          []Section `json:"sections"`
 	Accordion         []Section `json:"accordion"`
 	Charts            []Figure  `json:"charts"`
@@ -17,13 +19,17 @@ type BulletinModel struct {
 	RelatedBulletins  []Link    `json:"relatedBulletins"`
 	RelatedData       []Link    `json:"relatedData"`
 	Links             []Link    `json:"links"`
-	Type              string    `json:"type"`
 	URI               string    `json:"uri"`
 	NationalStatistic bool      `json:"nationalStatistic"`
+	LatestRelease     bool      `json:"latestRelease"`
 	Edition           string    `json:"edition"`
 	ReleaseDate       string    `json:"releaseDate"`
 	NextRelease       string    `json:"nextRelease"`
 	Contact           Contact   `json:"contact"`
+	Versions          []Message `json:"versions"`
+	Alerts            []Message `json:"alerts"`
+	ParentPath        string    `json:"parentPath"`
+	CorrectedPath     string    `json:"correctedPath"`
 }
 
 type Contact struct {
@@ -49,27 +55,38 @@ type Section struct {
 	Markdown string `json:"markdown"`
 }
 
-func CreateBulletinModel(basePage coreModel.Page, bulletin zebedee.Bulletin) BulletinModel {
+type Message struct {
+	Date     string `json:"date"`
+	Markdown string `json:"markdown"`
+	URI      string `json:"uri"`
+}
+
+func CreateBulletinModel(basePage coreModel.Page, bulletin zebedee.Bulletin, bcs []zebedee.Breadcrumb) BulletinModel {
 	model := BulletinModel{
 		Page: basePage,
 	}
+
 	model.Metadata = coreModel.Metadata{
 		Title:       bulletin.Description.Title,
 		Description: bulletin.Description.MetaDescription,
 		Keywords:    bulletin.Description.Keywords,
 	}
-	model.Type = bulletin.Type
 	model.URI = bulletin.URI
 	model.DatasetId = bulletin.Description.DatasetID
 	model.NationalStatistic = bulletin.Description.NationalStatistic
 	model.Edition = bulletin.Description.Edition
 	model.ReleaseDate = bulletin.Description.ReleaseDate
 	model.NextRelease = bulletin.Description.NextRelease
-
+	model.LatestRelease = bulletin.Description.LatestRelease
 	model.Contact = Contact{
 		Name:      bulletin.Description.Contact.Name,
 		Email:     bulletin.Description.Contact.Email,
 		Telephone: bulletin.Description.Contact.Telephone,
+	}
+
+	model.ParentPath = parentPath(bulletin.URI)
+	if strings.HasSuffix(model.ParentPath, "previous") {
+		model.CorrectedPath = parentPath(model.ParentPath)
 	}
 
 	model.Sections = []Section{}
@@ -143,5 +160,36 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin zebedee.Bulletin) Bul
 			URI:      s.URI,
 		})
 	}
+
+	model.Versions = []Message{}
+	for _, v := range bulletin.Versions {
+		model.Versions = append(model.Versions, Message{
+			Date:     v.ReleaseDate,
+			Markdown: v.Notice,
+			URI:      v.URI,
+		})
+	}
+	sort.Slice(model.Versions, func(i, j int) bool { return model.Versions[i].Date > model.Versions[j].Date })
+
+	model.Alerts = []Message{}
+	for _, a := range bulletin.Alerts {
+		model.Alerts = append(model.Alerts, Message{
+			Markdown: a.Markdown,
+			Date:     a.Date,
+		})
+	}
+	sort.Slice(model.Alerts, func(i, j int) bool { return model.Alerts[i].Date > model.Alerts[j].Date })
+
+	for _, bc := range bcs {
+		model.Page.Breadcrumb = append(model.Page.Breadcrumb, coreModel.TaxonomyNode{
+			Title: bc.Description.Title,
+			URI:   bc.URI,
+		})
+	}
+
 	return model
+}
+
+func parentPath(p string) string {
+	return p[:strings.LastIndex(p, "/")]
 }

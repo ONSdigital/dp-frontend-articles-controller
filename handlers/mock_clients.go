@@ -137,6 +137,21 @@ func (m *MockZebedeeClient) EXPECT() *MockZebedeeClientMockRecorder {
 	return m.recorder
 }
 
+// GetBreadcrumb mocks base method.
+func (m *MockZebedeeClient) GetBreadcrumb(ctx context.Context, userAccessToken, collectionID, lang, uri string) ([]zebedee.Breadcrumb, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBreadcrumb", ctx, userAccessToken, collectionID, lang, uri)
+	ret0, _ := ret[0].([]zebedee.Breadcrumb)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBreadcrumb indicates an expected call of GetBreadcrumb.
+func (mr *MockZebedeeClientMockRecorder) GetBreadcrumb(ctx, userAccessToken, collectionID, lang, uri interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBreadcrumb", reflect.TypeOf((*MockZebedeeClient)(nil).GetBreadcrumb), ctx, userAccessToken, collectionID, lang, uri)
+}
+
 // GetBulletin mocks base method.
 func (m *MockZebedeeClient) GetBulletin(ctx context.Context, userAccessToken, lang, uri string) (zebedee.Bulletin, error) {
 	m.ctrl.T.Helper()

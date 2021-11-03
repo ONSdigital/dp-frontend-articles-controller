@@ -1,22 +1,292 @@
+{{ $lang := .Language }}
+
 <div class="page-bulletins background--astral text--white">
     <div class="wrapper">
         <div class="col-wrap">
-            <div class="col">                
+            <div class="col">
+                <nav aria-label="Bulletin breadcrumbs">
+                    <div class="breadcrumb-bulletins print--hide">
+                        <ol class="breadcrumb-bulletins__list">
+                            {{ range .Breadcrumb }}
+                                <li class="breadcrumb-bulletins__item">
+                                    <span class="icon icon-arrow-back--light-small hide--md"></span>
+                                    <a class="breadcrumb-bulletins__link" href="{{ .URI }}">{{ .Title }}</a>
+                                    <span class="icon icon-arrow-forward--light-small hide--sm"/>
+                                </li>
+                            {{ end }}
+                            <li class="breadcrumb-bulletins__item">
+                                {{ .Metadata.Title }}
+                            </li>
+                        </ol>
+                    </div>
+                </nav>
+             
                 <div class="col margin-left--0">
-                    <h1 class="padding-bottom--0 padding-top--0 margin-top--2 font-weight-700 margin-bottom--2 ">{{ .Metadata.Title }}: {{ .Edition }}</h1>
+                    <h1 class="padding-bottom--0 padding-top--0 margin-top--2 font-weight-700 {{ if .Metadata.Description }}margin-bottom--2 {{ else }}margin-bottom--4{{ end }}">
+                        {{ .Metadata.Title }}{{ if .Edition }}: {{ .Edition }}{{ end }}
+                    </h1>
                     <p class="page-bulletins--Summary margin-right-md--2 margin-bottom--3 padding-bottom--0 padding-top--0">
                         {{ .Metadata.Description }}
                     </p>
                 </div>
-            </div> 
-        </div> 
+            </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="col-wrap">
+            {{ if .CorrectedPath }}
+                {{/* If an older version of any release, link to latest version of that release */}}
+                <div class="col alert-release-banner alert-release-banner__not-latest">
+                    <p class="alert-release-banner__title">{{ localise "ThisHasBeenSuperseded" $lang 1 }}.
+                        <a class="alert-release-banner__link" href="{{ .CorrectedPath }}">{{ localise "ViewCorrectedVersion" $lang 1 }}</a>
+                    </p>
+                </div>
+            {{ else if .LatestRelease }}
+                <div class="col alert-release-banner alert-release-banner__latest">
+                    <p class="alert-release-banner__title">{{ localise "ThisIsLatestRelease" $lang 1 }}.
+                        <a href="{{ .ParentPath }}/previousReleases">{{ localise "ViewPreviousReleases" $lang 1 }}</a>
+                    </p>
+                </div>
+            {{ else }}
+                <div class="col alert-release-banner alert-release-banner__not-latest">
+                    <p class="alert-release-banner__title">{{ localise "ThisIsNotLatestRelease" $lang 1 }}.
+                        <a class="alert-release-banner__link" href="{{ .ParentPath }}">{{ localise "ViewLatestRelease" $lang 1 }}</a>
+                    </p>
+                </div>
+            {{ end }}
+
+            {{ if or .Versions .Alerts}}
+                <div class="col show-hide show-hide--dark margin-top--4 js-show-hide">
+                    <div class="alert-bulletins--border">
+                        <div class="js-show-hide__title">
+                            <button class="js-show-hide__button margin-top--2 alert-bulletins--expand-arrow" type="button" aria-expanded="false" aria-controls="collapsible-0">
+                                <span class="icon icon-info icon-info--info-box alert-bulletins--info-box"></span>
+
+                                <h2 class="show-hide__title alert-bulletins--warning__title">
+                                    {{ if and .Versions .Alerts }}
+                                        {{ localise "CorrectionsAndNotices" $lang 1 }}
+                                    {{ else if .Versions }}
+                                        {{ if (gt (len .Versions) 1) }}
+                                            {{ localise "Correction" .Language 4  }}
+                                        {{ else }}
+                                            {{ localise "Correction" .Language 1  }}
+                                        {{ end }}
+                                    {{ else if .Alerts }}
+                                        {{ if (gt (len .Alerts) 1) }}
+                                            {{ localise "Notice" .Language 4  }}
+                                        {{ else }}
+                                            {{ localise "Notice" .Language 1  }}
+                                        {{ end }}
+                                    {{ end }}
+                                </h2>
+                            </button>
+                        </div>
+
+                        <div class="js-show-hide__content ">
+                            {{ if .Versions }}
+                                <div class="show-hide__content alert-bulletins--warning__content section__content--markdown">
+                                    <section>
+                                        {{ if and .Versions .Alerts }}
+                                            <h3 class="alert-bulletins--correction__title">{{ localise "Correction" $lang 4 }}</h3>
+                                        {{ end }}
+                                        {{ range .Versions }}
+                                            <p class="alert-bulletins__date">{{ dateFormat .Date }}</p>
+                                            {{ .Markdown | markdown }}
+                                            <a class="btn btn--tertiary margin-bottom-sm--3 margin-bottom-md--3 print--hide" href="{{ .URI }}">{{ localise "ViewSupersededVersion" $lang 1 }}</a>
+                                        {{ end }}
+                                    </section>
+                                </div>
+                            {{ end }}
+
+                            {{ if .Alerts }}
+                                <div class="show-hide__content alert-bulletins--warning__content section__content--markdown">
+                                    <section>
+                                        {{ if and .Versions .Alerts }}
+                                            <h3 class="alert-bulletins--notice__title">{{ localise "Notice" $lang 4  }}</h3>
+                                        {{ end }}
+                                        {{ range .Alerts }}
+                                            <p class="alert-bulletins__date">{{ dateFormat .Date }}</p>
+                                            {{ .Markdown | markdown }}
+                                        {{end}}
+                                    </section>
+                                </div>
+                            {{ end }}
+                        </div>
+                    </div>
+                </div>
+            {{ end }}
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="col-wrap margin-top--3 margin-left--0">
+            {{ if .NationalStatistic }} 
+                <div class="col col--md-4 col--lg-4"><a class="meta__image" href="https://www.statisticsauthority.gov.uk/national-statistician/types-of-official-statistics/"><img
+                class="meta__image margin-right--0" src="/img/national-statistics.png"
+                alt="This is an accredited National Statistic. Click for information about types of official statistics."/></a></div>
+            {{ end }}
+            <p class="col col--md-12 col--lg-15 margin-bottom-sm--1 margin-bottom-md--3 margin-top-sm--1 padding-bottom--0 padding-top--0">
+                <span class="font-weight-700">{{ localise "Contact" $lang 1  }}: </span><br/><a href="mailto:{{ .Contact.Email }}" class="text--white"><span class="visuallyhidden">Email </span>{{ if .Contact.Name }}{{ .Contact.Name }}{{ else }}{{ .Contact.Email }}{{ end }}</a>
+            </p>
+
+            <p class="col col--md-one-third col--lg-one-third margin-bottom-sm--1 margin-bottom-md--3 margin-top--0 padding-bottom--0 padding-top--0">
+                <span class="font-weight-700">{{ localise "ReleaseDate" $lang 1  }}: </span><br/>{{ dateFormat .ReleaseDate }}<br/>
+            </p>
+
+            <p class="col col--md-one-third col--lg-one-third margin-bottom-sm--3 margin-bottom-md--3 margin-top--0 padding-bottom--0 padding-top--0">
+                <span class="font-weight-700">{{ localise "NextRelease" $lang 1  }}: </span><br/>{{ if .NextRelease }}{{ .NextRelease }}{{ else }}To be announced{{ end }}
+            </p>
+        </div>
     </div>
 </div>
+
 <div class="page-content">
     <div class="wrapper">
-        <h2>TODO...</h2>
+        <div class="col-wrap border-bottom--iron-md">
+            {{/* Table of Contents */}}
+            <div class="col col--md-31 col--lg-41 margin-left-md--1">
+                <div class="table-of-contents print--avoid-break">
+                    <h2 class="table-of-contents__title">{{ localise "TableOfContents" $lang 1 }}</h2>
+                    <ol id="toc" class="table-of-contents__list">
+                        {{ range .Sections }}
+                        <li class="table-of-contents__item">
+                            <a href="#{{ .Title | slug }}" class="js-scroll">{{ .Title }}</a>
+                        </li>
+                        {{ end }}
+                        {{ range .Accordion }}
+                        <li class="table-of-contents__item">
+                            <a href="#{{ .Title | slug }}" class="js-scroll expand-accordion">{{ .Title }}</a>
+                        </li>
+                        {{ end }}
+                    </ol>
+                </div>
+            </div>
+            
+            {{/* Print & PDF */}}
+            <div class="col col--md-15 col--lg-16 margin-bottom-sm--2 margin-top-md--7 margin-bottom-md--2 margin-left-lg--2 padding-bottom-sm--2 padding-left-sm--1 padding-bottom-md--1 border-top--iron-sm border-right--iron-sm border-bottom--iron-sm border-left--iron-sm border-top--iron-md border-right--iron-md border-bottom--iron-md border-left--iron-md js-print-pdf print--hide">
+                <p class="text-right--md padding-top-md--0 padding-bottom-md--0 height--5 margin-bottom-md--0 print--hide nojs--hide js--show">
+                    <a href="" class="link-complex nojs--hide js--show js-print-page">
+                        Print this <span class="lowercase">{{ localise "StatisticalBulletin" $lang 1 }}</span>
+                    </a>
+                    <span class="icon icon-print--dark"></span>
+                </p>
+                <p class="text-right--md padding-top-md--0 padding-bottom-md--0 height--5 margin-top-md--1 print--hide">
+                    <a href="{{ .URI }}/pdf" class="link-complex js-pdf-dl-link" aria-label="Download {{ .Metadata.Title }} as PDF">
+                        {{ localise "DownloadAsPdf" $lang 1 }}
+                    </a>
+                    <span class="icon icon-download--dark"></span>
+                </p>
+            </div>
+        </div>
+
+        {{/* Show extra cta to related data on mobile */}}
+		<div class="hide--md margin-top-sm--1">
+            {{ template "partials/related-data" . }}
+        </div>
+
+        {{/* Content */}}
+        <article class="col col--md-36 col--lg-39 page-content__main-content padding-bottom">
+            {{ range $i, $s := .Sections }}
+                <div id="{{ $s.Title | slug }}" class="section__content--markdown">
+                    <section>
+                        <header>
+                            <h2><span class="section__content-number">{{ add $i 1 }}.</span> {{ $s.Title }}</h2>
+                        </header>
+                        {{ $s.Markdown | markdown }}
+                        <a class="print--hide js-scroll" href="#toc">{{localise "BackToTableOfContents" $lang 1 }}</a>
+                    </section>
+                </div>
+            {{ end }}
+
+            {{/* Accordion */}}
+            {{ if .Accordion }}
+                {{ $accordion := .Accordion }}
+                {{ $sections := .Sections }}
+                <div class="margin-top--4 margin-bottom--4">
+                    {{ range $i, $a := $accordion }}
+                        <div id="{{ $a.Title | slug }}" class="js-show-hide section__content--markdown border-top--iron-sm border-top--iron-md{{ if last $i $accordion }} border-bottom--iron-sm border-bottom--iron-md{{ end }}">
+                            <section>
+                                <div class="show-hide show-hide--light">
+                                    <div class="js-show-hide__title">
+                                        <h2 class="show-hide__title flush">
+                                            <span class="section__content-number">{{ add $i (add 1 (len $sections)) }}.</span>{{ $a.Title }}
+                                        </h2>
+                                    </div>
+                                    <div class="js-show-hide__content margin-bottom--4">
+                                        {{ $a.Markdown | markdown }}
+                                        <a class="print--hide js-scroll"
+                                           href="#toc">{{ localise "BackToTableOfContents" $lang 1 }}</a>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    {{ end }}
+                </div>
+            {{ else }}
+                {{/*  Margin at bottom of article if no Accordion present */}}
+                <div class="margin-bottom--4">
+                </div>
+            {{ end }}
+        </article>
+
+        {{/* Sidebar */}}
+        <div class="col col--md-11 col--lg-20 margin-top-md--3">
+            {{/* Related data */}}
+            {{ template "partials/related-data" . }}
+
+            {{/* Contact details */}}
+            <div class="tiles__item tiles__item--nav-type flush-col">
+                <h3 class="tiles__title-h3 tiles__title-h3--nav">
+                    {{ localise "ContactDetailsForThisStatisticalBulletin" $lang 1 }}
+                </h3>
+                <div class="tiles__content--nav">
+                    <address>
+                        {{ if .Contact.Name }}{{ .Contact.Name }}<br/>{{ end }}
+                        <a href="mailto:{{ .Contact.Email }}">{{ .Contact.Email }}</a><br/>
+                        {{ if .Contact.Telephone }}{{ localise "Telephone" $lang 1 }}: {{ .Contact.Telephone }}{{ end }}
+                    </address>
+                </div>
+            </div>
+
+            {{/* Related bulletins */}}
+            {{ if .RelatedBulletins }}
+                <div class="tiles__item tiles__item--nav-type flush-col print--hide">
+                    <h3 class="tiles__title-h3 tiles__title-h3--nav">{{ localise "RelatedBulletins" $lang 1 }}</h3>
+                    <div class="tiles__content tiles__content--nav">
+                        <ul class="list--neutral">
+                            {{ range .RelatedBulletins }}
+                                {{ if .Title }}
+                                    <li>
+                                        <a href="{{ .URI }}"
+                                        data-gtm-title="{{ .Title }}"
+                                        data-gtm-type="related-bulletin">{{ .Title }}</a>
+                                    </li>
+                                {{ end }}
+                            {{ end }}
+                        </ul>
+                    </div>
+                </div>
+            {{ end }}
+
+            {{/* Related links */}}
+            {{ if .Links }}
+                <div class="tiles__item tiles__item--nav-type flush-col">
+                    <h2 class="font-size--21 tiles__title-h3 tiles__title-h3--nav">
+                        {{ localise "YouMightAlsoBeInterestedIn" $lang 1 }}:
+                    </h2>
+                    <div class="tiles__content--nav">
+                        <ul class="list--neutral">
+                            {{ range .Links }}
+                                {{ if .Title }}
+                                    <li><a href="{{ .URI }}"
+                                        data-gtm-title="{{ .Title }}"
+                                        data-gtm-type="related-link">{{ .Title }}</a>
+                                    </li>
+                                {{ end }}
+                            {{ end }}
+                        </ul>
+                    </div>
+                </div>
+            {{ end }}
+        </div>
     </div>
 </div>
-	
-
-            

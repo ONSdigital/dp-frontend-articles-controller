@@ -1,0 +1,104 @@
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Notes
+# - Documentation: https://github.com/nicksnyder/go-i18n/blob/master/README.md
+# - Description should be the English version of the text, unless English version is a shorthand e.g. Home button is shorthand in English for Homepage
+# - Arguments can be added via {{.argN}} where N is integer index starting at 0 e.g. {{.arg0}} {{.arg1}}
+# - To inject HTML (Avoid where possible as it is messy) use "| safeHTML" e.g. {{ localise Foo .Language 1 | safeHTML }} where Foo might be "<strong>test</strong>"
+# count - 0 = zero
+# count - 1 = one
+# count - 2 = two; useful for languages with mutations like welsh (radical) 'brother'=brawd, two (soft) 'brothers'=frawd, three or more (nasal) 'brothers'=brodyr
+# count - 3 = few
+# count - 6 = many
+# count - 4 = other; 4,5 & >6
+# Plural rules can be found here: http://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[Contact]
+description = "Contact"
+one = "Cyswllt"
+
+[ReleaseDate]
+description = "Release date"
+one = "Dyddiad y datganiad"
+
+[NextRelease]
+description = "Next release"
+one = "Cyhoeddiad nesaf"
+
+[StatisticalBulletin]
+description = "Statistical bulletin"
+one = "Bwletin ystadegol"
+
+[DownloadAsPdf]
+description = "Download as PDF"
+one = "Download as PDF"
+
+[TableOfContents]
+description = "Table of contents"
+one = "Cynnwys"
+
+[BackToTableOfContents]
+description = "Back to table of contents"
+one = "Nôl i'r tabl cynnwys"
+
+[ContactDetailsForThisStatisticalBulletin]
+description = "Contact details for this statistical bulletin"
+one = "Manylion cyswllt ar gyfer y bwletin ystadegol hwn"
+
+[Telephone]
+description = "Telephone"
+one = "Ffôn"
+
+[RelatedBulletins]
+description = "Related bulletins"
+one = "Bwletinau cysylltiedig"
+
+[ViewAllDataUsedInThisStatisticalBulletin]
+description = "View all data used in this statistical bulletin"
+one = "Gweld yr holl ddata a ddefnyddir yn y bwletin ystadegol hwn"
+
+[YouMightAlsoBeInterestedIn]
+description = "You might also be interested in"
+one = "Efallai y bydd hefyd gennych ddiddordeb yn"
+
+[ThisHasBeenSuperseded]
+description = "This has been superseded."
+one = "This has been superseded"
+
+[ThisIsLatestRelease]
+description = "This is the latest release."
+one = "This is the latest release"
+
+[ThisIsNotLatestRelease]
+description = "This is not the latest release."
+one = "This is not the latest release"
+
+[ViewCorrectedVersion]
+description = "View corrected version"
+one = "View corrected version"
+
+[ViewSupersededVersion]
+description = "View superseded version"
+one = "View superseded version"
+
+[ViewPreviousReleases]
+description = "View previous releases"
+one = "View previous releases"
+
+[ViewLatestRelease]
+description = "View latest release"
+one = "View latest release"
+
+[CorrectionsAndNotices]
+description = "Corrections and notices"
+one = "Corrections and notices"
+
+[Notice]
+description = "Notice"
+one = "Notice"
+other = "Notices"
+
+[Correction]
+description = "Correction"
+one = "Correction"
+other = "Corrections"
