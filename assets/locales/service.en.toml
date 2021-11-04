@@ -25,9 +25,13 @@ one = "Release date"
 description = "Next release"
 one = "Next release"
 
-[StatisticalBulletin]
-description = "Statistical bulletin"
-one = "Statistical bulletin"
+[ToBeAnnounced]
+description = "To be announced"
+one = "To be announced"
+
+[PrintThisStatisticalBulletin]
+description = "Print this statistical bulletin"
+one = "Print this statistical bulletin"
 
 [DownloadAsPdf]
 description = "Download as PDF"

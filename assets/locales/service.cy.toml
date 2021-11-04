@@ -25,9 +25,13 @@ one = "Dyddiad y datganiad"
 description = "Next release"
 one = "Cyhoeddiad nesaf"
 
-[StatisticalBulletin]
-description = "Statistical bulletin"
-one = "Bwletin ystadegol"
+[ToBeAnnounced]
+description = "To be announced"
+one = "To be announced"
+
+[PrintThisStatisticalBulletin]
+description = "Print this statistical bulletin"
+one = "Print this bwletin ystadegol"
 
 [DownloadAsPdf]
 description = "Download as PDF"
