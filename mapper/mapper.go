@@ -31,6 +31,7 @@ type BulletinModel struct {
 	Alerts            []Message `json:"alerts"`
 	ParentPath        string    `json:"parentPath"`
 	CorrectedPath     string    `json:"correctedPath"`
+	LatestReleaseUri  string    `json:"latestReleaseUri"`
 }
 
 type Contact struct {
@@ -80,6 +81,7 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin zebedee.Bulletin, bcs
 	model.ReleaseDate = bulletin.Description.ReleaseDate
 	model.NextRelease = bulletin.Description.NextRelease
 	model.LatestRelease = bulletin.Description.LatestRelease
+	model.LatestReleaseUri = bulletin.LatestReleaseURI
 	model.Contact = Contact{
 		Name:      bulletin.Description.Contact.Name,
 		Email:     bulletin.Description.Contact.Email,

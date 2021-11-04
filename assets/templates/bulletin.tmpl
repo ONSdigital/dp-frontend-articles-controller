@@ -50,7 +50,7 @@
             {{ else }}
                 <div class="col alert-release-banner alert-release-banner__not-latest">
                     <p class="alert-release-banner__title">{{ localise "ThisIsNotLatestRelease" $lang 1 }}.
-                        <a class="alert-release-banner__link" href="{{ .ParentPath }}/latest">{{ localise "ViewLatestRelease" $lang 1 }}</a>
+                        <a class="alert-release-banner__link" href="{{ .LatestReleaseUri }}">{{ localise "ViewLatestRelease" $lang 1 }}</a>
                     </p>
                 </div>
             {{ end }}
