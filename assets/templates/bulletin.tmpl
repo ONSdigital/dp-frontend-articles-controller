@@ -90,7 +90,7 @@
                                             <h3 class="alert-bulletins--correction__title">{{ localise "Correction" $lang 4 }}</h3>
                                         {{ end }}
                                         {{ range .Versions }}
-                                            <p class="alert-bulletins__date">{{ dateFormat .Date }}</p>
+                                            <p class="alert-bulletins__date">{{ dateTimeFormat .Date }}</p>
                                             {{ .Markdown | markdown }}
                                             <a class="btn btn--tertiary margin-bottom-sm--3 margin-bottom-md--3 print--hide" href="{{ .URI }}">{{ localise "ViewSupersededVersion" $lang 1 }}</a>
                                         {{ end }}
