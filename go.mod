@@ -3,7 +3,7 @@ module github.com/ONSdigital/dp-frontend-articles-controller
 go 1.17
 
 require (
-	github.com/ONSdigital/dp-api-clients-go/v2 v2.3.1-0.20211104131225-b95b1e23722f
+	github.com/ONSdigital/dp-api-clients-go/v2 v2.4.1
 	github.com/ONSdigital/dp-healthcheck v1.1.0
 	github.com/ONSdigital/dp-net v1.2.0
 	github.com/ONSdigital/dp-renderer v1.7.1-0.20211029125950-3d77dbf890db
