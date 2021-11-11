@@ -179,6 +179,7 @@ func TestUnitMapper(t *testing.T) {
 				model := CreateBulletinModel(basePage, bulletin, breadcrumbs)
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
+				So(model.FeatureFlags.SixteensVersion, ShouldEqual, "67f6982")
 				So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
 				So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
 				So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
@@ -236,6 +237,7 @@ func TestUnitMapper(t *testing.T) {
 				model := CreateBulletinModel(basePage, bulletin, breadcrumbs)
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
+				So(model.FeatureFlags.SixteensVersion, ShouldEqual, "67f6982")
 				So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
 				So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
 				So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)

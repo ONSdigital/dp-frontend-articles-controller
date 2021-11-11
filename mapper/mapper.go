@@ -67,6 +67,7 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin zebedee.Bulletin, bcs
 	model := BulletinModel{
 		Page: basePage,
 	}
+	model.FeatureFlags.SixteensVersion = "67f6982"
 
 	model.Metadata = coreModel.Metadata{
 		Title:       bulletin.Description.Title,
