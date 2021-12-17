@@ -113,7 +113,7 @@ func TestInitSuccess(t *testing.T) {
 
 						Convey("And the checkers are registered and the healthcheck", func() {
 							So(mockServiceList.HealthCheck, ShouldBeTrue)
-							So(len(hcMock.AddCheckCalls()), ShouldEqual, 1)
+							So(len(hcMock.AddCheckCalls()), ShouldEqual, 2)
 							So(len(initMock.DoGetHTTPServerCalls()), ShouldEqual, 1)
 							So(initMock.DoGetHTTPServerCalls()[0].BindAddr, ShouldEqual, ":26500")
 						})
@@ -198,8 +198,9 @@ func TestInitFailure(t *testing.T) {
 
 						Convey("And all checks try to register", func() {
 							So(mockServiceList.HealthCheck, ShouldBeTrue)
-							So(len(hcMockAddFail.AddCheckCalls()), ShouldEqual, 1)
+							So(len(hcMockAddFail.AddCheckCalls()), ShouldEqual, 2)
 							So(hcMockAddFail.AddCheckCalls()[0].Name, ShouldResemble, "Zebedee")
+							So(hcMockAddFail.AddCheckCalls()[1].Name, ShouldResemble, "Articles API")
 						})
 					})
 				})

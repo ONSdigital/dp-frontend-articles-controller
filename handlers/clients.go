@@ -4,7 +4,8 @@ import (
 	context "context"
 	"io"
 
-	zebedee "github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
+	"github.com/ONSdigital/dp-api-clients-go/v2/articles"
+	"github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
 	"github.com/ONSdigital/dp-renderer/model"
 )
 
@@ -25,6 +26,10 @@ type RenderClient interface {
 
 // ZebedeeClient is an interface for zebedee client
 type ZebedeeClient interface {
-	GetBulletin(ctx context.Context, userAccessToken, lang, uri string) (zebedee.Bulletin, error)
 	GetBreadcrumb(ctx context.Context, userAccessToken, collectionID, lang, uri string) ([]zebedee.Breadcrumb, error)
+}
+
+// ArticlesApiClient is an interface for the Articles API client
+type ArticlesApiClient interface {
+	GetLegacyBulletin(ctx context.Context, userAccessToken, collectionID, lang, uri string) (*articles.Bulletin, error)
 }

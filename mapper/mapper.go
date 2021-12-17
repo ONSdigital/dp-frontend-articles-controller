@@ -4,6 +4,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/articles"
 	"github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
 	coreModel "github.com/ONSdigital/dp-renderer/model"
 )
@@ -63,7 +64,7 @@ type Message struct {
 	URI      string `json:"uri"`
 }
 
-func CreateBulletinModel(basePage coreModel.Page, bulletin zebedee.Bulletin, bcs []zebedee.Breadcrumb) BulletinModel {
+func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb) BulletinModel {
 	model := BulletinModel{
 		Page: basePage,
 	}

@@ -4,6 +4,7 @@ import (
 	"sort"
 	"testing"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/articles"
 	"github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
 	coreModel "github.com/ONSdigital/dp-renderer/model"
 
@@ -14,7 +15,8 @@ func TestUnitMapper(t *testing.T) {
 
 	Convey("Given a bulletin, basePage and breadcrumbs", t, func() {
 		basePage := coreModel.NewPage("path/to/assets", "site-domain")
-		bulletin := zebedee.Bulletin{
+
+		bulletin := articles.Bulletin{
 			Description: zebedee.Description{
 				Title:             "Title",
 				Edition:           "2021",

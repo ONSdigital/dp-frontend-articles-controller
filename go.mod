@@ -3,7 +3,7 @@ module github.com/ONSdigital/dp-frontend-articles-controller
 go 1.17
 
 require (
-	github.com/ONSdigital/dp-api-clients-go/v2 v2.4.1
+	github.com/ONSdigital/dp-api-clients-go/v2 v2.7.0
 	github.com/ONSdigital/dp-healthcheck v1.1.0
 	github.com/ONSdigital/dp-net v1.2.0
 	github.com/ONSdigital/dp-renderer v1.9.0
@@ -17,6 +17,7 @@ require (
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/ONSdigital/dp-api-clients-go v1.41.1 // indirect
+	github.com/ONSdigital/log.go v1.1.0 // indirect
 	github.com/c2h5oh/datasize v0.0.0-20200825124411-48ed595a09d2 // indirect
 	github.com/fatih/color v1.12.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect

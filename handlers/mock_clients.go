@@ -9,6 +9,7 @@ import (
 	io "io"
 	reflect "reflect"
 
+	articles "github.com/ONSdigital/dp-api-clients-go/v2/articles"
 	zebedee "github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
 	model "github.com/ONSdigital/dp-renderer/model"
 	gomock "github.com/golang/mock/gomock"
@@ -152,17 +153,40 @@ func (mr *MockZebedeeClientMockRecorder) GetBreadcrumb(ctx, userAccessToken, col
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBreadcrumb", reflect.TypeOf((*MockZebedeeClient)(nil).GetBreadcrumb), ctx, userAccessToken, collectionID, lang, uri)
 }
 
-// GetBulletin mocks base method.
-func (m *MockZebedeeClient) GetBulletin(ctx context.Context, userAccessToken, lang, uri string) (zebedee.Bulletin, error) {
+// MockArticlesApiClient is a mock of ArticlesApiClient interface.
+type MockArticlesApiClient struct {
+	ctrl     *gomock.Controller
+	recorder *MockArticlesApiClientMockRecorder
+}
+
+// MockArticlesApiClientMockRecorder is the mock recorder for MockArticlesApiClient.
+type MockArticlesApiClientMockRecorder struct {
+	mock *MockArticlesApiClient
+}
+
+// NewMockArticlesApiClient creates a new mock instance.
+func NewMockArticlesApiClient(ctrl *gomock.Controller) *MockArticlesApiClient {
+	mock := &MockArticlesApiClient{ctrl: ctrl}
+	mock.recorder = &MockArticlesApiClientMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockArticlesApiClient) EXPECT() *MockArticlesApiClientMockRecorder {
+	return m.recorder
+}
+
+// GetLegacyBulletin mocks base method.
+func (m *MockArticlesApiClient) GetLegacyBulletin(ctx context.Context, userAccessToken, collectionID, lang, uri string) (*articles.Bulletin, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBulletin", ctx, userAccessToken, lang, uri)
-	ret0, _ := ret[0].(zebedee.Bulletin)
+	ret := m.ctrl.Call(m, "GetLegacyBulletin", ctx, userAccessToken, collectionID, lang, uri)
+	ret0, _ := ret[0].(*articles.Bulletin)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetBulletin indicates an expected call of GetBulletin.
-func (mr *MockZebedeeClientMockRecorder) GetBulletin(ctx, userAccessToken, lang, uri interface{}) *gomock.Call {
+// GetLegacyBulletin indicates an expected call of GetLegacyBulletin.
+func (mr *MockArticlesApiClientMockRecorder) GetLegacyBulletin(ctx, userAccessToken, collectionID, lang, uri interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBulletin", reflect.TypeOf((*MockZebedeeClient)(nil).GetBulletin), ctx, userAccessToken, lang, uri)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLegacyBulletin", reflect.TypeOf((*MockArticlesApiClient)(nil).GetLegacyBulletin), ctx, userAccessToken, collectionID, lang, uri)
 }

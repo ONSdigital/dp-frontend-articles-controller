@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/articles"
 	"github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
 	"github.com/ONSdigital/dp-frontend-articles-controller/assets"
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
@@ -47,8 +48,9 @@ func (svc *Service) Init(ctx context.Context, cfg *config.Config, serviceList *E
 
 	// Initialise clients
 	clients := routes.Clients{
-		Render:  render.NewWithDefaultClient(assets.Asset, assets.AssetNames, cfg.PatternLibraryAssetsPath, cfg.SiteDomain),
-		Zebedee: zebedee.NewWithHealthClient(routerHealthClient),
+		Render:      render.NewWithDefaultClient(assets.Asset, assets.AssetNames, cfg.PatternLibraryAssetsPath, cfg.SiteDomain),
+		Zebedee:     zebedee.NewWithHealthClient(routerHealthClient),
+		ArticlesAPI: articles.NewWithHealthClient(routerHealthClient),
 	}
 
 	// Get healthcheck with checkers
@@ -136,6 +138,11 @@ func (svc *Service) registerCheckers(ctx context.Context, c routes.Clients) (err
 	if err = svc.HealthCheck.AddCheck("Zebedee", c.Zebedee.Checker); err != nil {
 		hasErrors = true
 		log.Error(ctx, "failed to add Zebedee checker", err)
+	}
+
+	if err = svc.HealthCheck.AddCheck("Articles API", c.ArticlesAPI.Checker); err != nil {
+		hasErrors = true
+		log.Error(ctx, "failed to add articles API checker", err)
 	}
 
 	if hasErrors {
