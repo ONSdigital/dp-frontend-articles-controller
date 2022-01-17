@@ -25,6 +25,6 @@ type RenderClient interface {
 
 // ZebedeeClient is an interface for zebedee client
 type ZebedeeClient interface {
-	GetBulletin(ctx context.Context, userAccessToken, lang, uri string) (zebedee.Bulletin, error)
+	GetBulletin(ctx context.Context, userAccessToken, collectionID, lang, uri string) (zebedee.Bulletin, error)
 	GetBreadcrumb(ctx context.Context, userAccessToken, collectionID, lang, uri string) ([]zebedee.Breadcrumb, error)
 }

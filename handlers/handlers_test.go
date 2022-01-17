@@ -7,7 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	zebedee "github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
+	"github.com/ONSdigital/dp-api-clients-go/v2/headers"
+	"github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 	gomock "github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
@@ -49,6 +50,9 @@ func TestUnitHandlers(t *testing.T) {
 
 	Convey("test GetBulletin", t, func() {
 		url := "/a/bulletin/url"
+		accessToken := "token"
+		collectionId := "collection"
+		lang := "en"
 		mockZebedeeClient := NewMockZebedeeClient(mockCtrl)
 		mockRenderClient := NewMockRenderClient(mockCtrl)
 		mockConfig := config.Config{}
@@ -56,16 +60,18 @@ func TestUnitHandlers(t *testing.T) {
 		router := mux.NewRouter()
 		router.HandleFunc(url, Bulletin(mockConfig, mockRenderClient, mockZebedeeClient))
 
+		req := httptest.NewRequest("GET", fmt.Sprintf("http://localhost:26500%s", url), nil)
+		headers.SetAuthToken(req, accessToken)
+		headers.SetCollectionID(req, collectionId)
+
 		w := httptest.NewRecorder()
 
 		Convey("it returns 200 when rendered succesfully", func() {
 			b := zebedee.Bulletin{URI: "/the/bulletin/url"}
-			mockZebedeeClient.EXPECT().GetBulletin(ctx, "", "en", url).Return(b, nil)
-			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, "", "", "en", b.URI)
+			mockZebedeeClient.EXPECT().GetBulletin(ctx, accessToken, collectionId, lang, url).Return(b, nil)
+			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, accessToken, collectionId, lang, b.URI)
 			mockRenderClient.EXPECT().NewBasePageModel()
 			mockRenderClient.EXPECT().BuildPage(w, gomock.Any(), "bulletin")
-
-			req := httptest.NewRequest("GET", fmt.Sprintf("http://localhost:26500%s", url), nil)
 
 			router.ServeHTTP(w, req)
 
@@ -73,9 +79,7 @@ func TestUnitHandlers(t *testing.T) {
 		})
 
 		Convey("it returns 500 when there is an error getting the bulletin from Zebedee", func() {
-			mockZebedeeClient.EXPECT().GetBulletin(ctx, "", "en", url).Return(zebedee.Bulletin{}, errors.New(("error reading data")))
-
-			req := httptest.NewRequest("GET", fmt.Sprintf("http://localhost:26500%s", url), nil)
+			mockZebedeeClient.EXPECT().GetBulletin(ctx, accessToken, collectionId, lang, url).Return(zebedee.Bulletin{}, errors.New(("error reading data")))
 
 			router.ServeHTTP(w, req)
 
@@ -84,9 +88,8 @@ func TestUnitHandlers(t *testing.T) {
 
 		Convey("it returns 500 when there is an error getting the breadcrumbs from Zebedee", func() {
 			b := zebedee.Bulletin{URI: "/the/bulletin/url"}
-			mockZebedeeClient.EXPECT().GetBulletin(ctx, "", "en", url).Return(b, nil)
-			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, "", "", "en", b.URI).Return([]zebedee.Breadcrumb{}, errors.New(("error reading breadcrumbs")))
-			req := httptest.NewRequest("GET", fmt.Sprintf("http://localhost:26500%s", url), nil)
+			mockZebedeeClient.EXPECT().GetBulletin(ctx, accessToken, collectionId, lang, url).Return(b, nil)
+			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, accessToken, collectionId, lang, b.URI).Return([]zebedee.Breadcrumb{}, errors.New(("error reading breadcrumbs")))
 
 			router.ServeHTTP(w, req)
 

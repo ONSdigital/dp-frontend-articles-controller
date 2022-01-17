@@ -5,6 +5,7 @@ import (
 
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 	"github.com/ONSdigital/dp-frontend-articles-controller/mapper"
+	dphandlers "github.com/ONSdigital/dp-net/handlers"
 	"github.com/ONSdigital/log.go/v2/log"
 )
 
@@ -21,24 +22,21 @@ func setStatusCode(req *http.Request, w http.ResponseWriter, err error) {
 
 // Bulletin handles bulletin requests
 func Bulletin(cfg config.Config, rc RenderClient, zc ZebedeeClient) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		bulletin(w, req, rc, zc, cfg)
-	}
+	return dphandlers.ControllerHandler(func(w http.ResponseWriter, r *http.Request, lang, collectionID, accessToken string) {
+		bulletin(w, r, lang, collectionID, accessToken, rc, zc, cfg)
+	})
 }
 
-func bulletin(w http.ResponseWriter, req *http.Request, rc RenderClient, zc ZebedeeClient, cfg config.Config) {
+func bulletin(w http.ResponseWriter, req *http.Request, lang, collectionID, accessToken string, rc RenderClient, zc ZebedeeClient, cfg config.Config) {
 	ctx := req.Context()
 
-	lang := "en"
-	userAccessToken := ""
-
-	bulletin, err := zc.GetBulletin(ctx, userAccessToken, lang, req.URL.EscapedPath())
+	bulletin, err := zc.GetBulletin(ctx, accessToken, collectionID, lang, req.URL.EscapedPath())
 	if err != nil {
 		setStatusCode(req, w, err)
 		return
 	}
 
-	breadcrumbs, err := zc.GetBreadcrumb(ctx, userAccessToken, "", lang, bulletin.URI)
+	breadcrumbs, err := zc.GetBreadcrumb(ctx, accessToken, collectionID, lang, bulletin.URI)
 	if err != nil {
 		setStatusCode(req, w, err)
 		return

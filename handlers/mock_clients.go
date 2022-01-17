@@ -153,16 +153,16 @@ func (mr *MockZebedeeClientMockRecorder) GetBreadcrumb(ctx, userAccessToken, col
 }
 
 // GetBulletin mocks base method.
-func (m *MockZebedeeClient) GetBulletin(ctx context.Context, userAccessToken, lang, uri string) (zebedee.Bulletin, error) {
+func (m *MockZebedeeClient) GetBulletin(ctx context.Context, userAccessToken, collectionID, lang, uri string) (zebedee.Bulletin, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBulletin", ctx, userAccessToken, lang, uri)
+	ret := m.ctrl.Call(m, "GetBulletin", ctx, userAccessToken, collectionID, lang, uri)
 	ret0, _ := ret[0].(zebedee.Bulletin)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetBulletin indicates an expected call of GetBulletin.
-func (mr *MockZebedeeClientMockRecorder) GetBulletin(ctx, userAccessToken, lang, uri interface{}) *gomock.Call {
+func (mr *MockZebedeeClientMockRecorder) GetBulletin(ctx, userAccessToken, collectionID, lang, uri interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBulletin", reflect.TypeOf((*MockZebedeeClient)(nil).GetBulletin), ctx, userAccessToken, lang, uri)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBulletin", reflect.TypeOf((*MockZebedeeClient)(nil).GetBulletin), ctx, userAccessToken, collectionID, lang, uri)
 }
