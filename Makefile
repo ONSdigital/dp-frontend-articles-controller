@@ -38,8 +38,8 @@ convey:
 	goconvey ./...
 
 .PHONY: test-component
-test-component:
-	go test -cover -coverpkg=github.com/ONSdigital/dp-frontend-articles-controller/... -component
+test-component: generate-prod
+	go test -cover -tags 'production' -coverpkg=github.com/ONSdigital/dp-frontend-articles-controller/... -component
 
 .PHONY: generate-debug
 generate-debug: fetch-dp-renderer
