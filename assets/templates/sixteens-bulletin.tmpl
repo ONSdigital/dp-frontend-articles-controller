@@ -20,7 +20,7 @@
                         </ol>
                     </div>
                 </nav>
-             
+
                 <div class="col margin-left--0">
                     <h1 class="padding-bottom--0 padding-top--0 margin-top--2 font-weight-700 {{ if .Metadata.Description }}margin-bottom--2 {{ else }}margin-bottom--4{{ end }}">
                         {{ .Metadata.Title }}{{ if .Edition }}: {{ .Edition }}{{ end }}
@@ -119,7 +119,7 @@
     </div>
     <div class="wrapper">
         <div class="col-wrap margin-top--3 margin-left--0">
-            {{ if .NationalStatistic }} 
+            {{ if .NationalStatistic }}
                 <div class="col col--md-4 col--lg-4"><a class="meta__image" href="https://www.statisticsauthority.gov.uk/national-statistician/types-of-official-statistics/"><img
                 class="meta__image margin-right--0" src="/img/national-statistics.png"
                 alt="This is an accredited National Statistic. Click for information about types of official statistics."/></a></div>
@@ -160,7 +160,7 @@
                     </ol>
                 </div>
             </div>
-            
+
             {{/* Print & PDF */}}
             <div class="col col--md-15 col--lg-16 margin-bottom-sm--2 margin-top-md--7 margin-bottom-md--2 margin-left-lg--2 padding-bottom-sm--2 padding-left-sm--1 padding-bottom-md--1 border-top--iron-sm border-right--iron-sm border-bottom--iron-sm border-left--iron-sm border-top--iron-md border-right--iron-md border-bottom--iron-md border-left--iron-md js-print-pdf print--hide">
                 <p class="text-right--md padding-top-md--0 padding-bottom-md--0 height--5 margin-bottom-md--0 print--hide nojs--hide js--show">
@@ -180,7 +180,7 @@
 
         {{/* Show extra cta to related data on mobile */}}
 		<div class="hide--md margin-top-sm--1">
-            {{ template "partials/related-data" . }}
+            {{ template "partials/sixteens-related-data" . }}
         </div>
 
         {{/* Content */}}
@@ -231,7 +231,7 @@
         {{/* Sidebar */}}
         <div class="col col--md-11 col--lg-20 margin-top-md--3">
             {{/* Related data */}}
-            {{ template "partials/related-data" . }}
+            {{ template "partials/sixteens-related-data" . }}
 
             {{/* Contact details */}}
             <div class="tiles__item tiles__item--nav-type flush-col">

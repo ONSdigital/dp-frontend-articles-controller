@@ -7,6 +7,7 @@ import (
 	"github.com/ONSdigital/dp-frontend-articles-controller/mapper"
 	dphandlers "github.com/ONSdigital/dp-net/handlers"
 	"github.com/ONSdigital/log.go/v2/log"
+	"github.com/gorilla/mux"
 )
 
 func setStatusCode(req *http.Request, w http.ResponseWriter, err error) {
@@ -21,16 +22,17 @@ func setStatusCode(req *http.Request, w http.ResponseWriter, err error) {
 }
 
 // Bulletin handles bulletin requests
-func Bulletin(cfg config.Config, rc RenderClient, zc ZebedeeClient, ac ArticlesApiClient) http.HandlerFunc {
+func SixteensBulletin(cfg config.Config, rc RenderClient, zc ZebedeeClient, ac ArticlesApiClient) http.HandlerFunc {
 	return dphandlers.ControllerHandler(func(w http.ResponseWriter, r *http.Request, lang, collectionID, accessToken string) {
-		bulletin(w, r, accessToken, collectionID, lang, rc, zc, ac, cfg)
+		sixteensBulletin(w, r, accessToken, collectionID, lang, rc, zc, ac, cfg)
 	})
 }
 
-func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collectionID, lang string, rc RenderClient, zc ZebedeeClient, ac ArticlesApiClient, cfg config.Config) {
+func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collectionID, lang string, rc RenderClient, zc ZebedeeClient, ac ArticlesApiClient, cfg config.Config) {
 	ctx := req.Context()
-
-	bulletin, err := ac.GetLegacyBulletin(ctx, userAccessToken, collectionID, lang, req.URL.EscapedPath())
+	muxVars := mux.Vars(req)
+	uri := muxVars["uri"]
+	bulletin, err := ac.GetLegacyBulletin(ctx, userAccessToken, collectionID, lang, uri)
 
 	if err != nil {
 		setStatusCode(req, w, err)
@@ -44,6 +46,6 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 	}
 
 	basePage := rc.NewBasePageModel()
-	model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs)
-	rc.BuildPage(w, model, "bulletin")
+	model := mapper.CreateSixteensBulletinModel(basePage, *bulletin, breadcrumbs)
+	rc.BuildPage(w, model, "sixteens-bulletin")
 }

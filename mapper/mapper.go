@@ -64,7 +64,7 @@ type Message struct {
 	URI      string `json:"uri"`
 }
 
-func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb) BulletinModel {
+func CreateSixteensBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb) BulletinModel {
 	model := BulletinModel{
 		Page: basePage,
 	}
