@@ -1,0 +1,17 @@
+<div class="ons-grid ons-js-toc-container ons-u-ml-no">
+  <!-- Left column -->
+  <div class="ons-grid__col ons-grid__col--sticky@m ons-col-4@m ons-u-p-no">
+    {{ template "partials/table-of-contents" . }}
+    <div class="ons-u-mb-l">
+      <h2 class="ons-u-fs-r--b ons-u-mb-s">Page actions</h2>
+      <div>Share</div>
+      <div>Download</div>
+      <div>Print</div>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div class="ons-grid__col ons-col-8@m">
+    {{ template "partials/bulletin/contents/body" . }}
+  </div>
+</div>

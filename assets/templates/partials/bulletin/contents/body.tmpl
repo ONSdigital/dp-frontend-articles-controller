@@ -1,0 +1,13 @@
+<div class="ons-pl-grid-col">
+  <div class="ons-u-mb-l">
+    <a href="">Read long version</a>
+  </div>
+  {{ $bulletin := . }}
+  {{ $sections := .TableOfContents.Sections }}
+  {{ range $id := .TableOfContents.DisplayOrder }}
+    {{ $section := index $sections $id }}
+    <section id="{{ $id }}">
+      <h2>{{ $section.Title.FuncLocalise $.Language }}</h2>
+    </section>
+  {{ end }}
+</div>
