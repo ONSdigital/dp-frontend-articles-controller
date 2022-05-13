@@ -202,7 +202,6 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 		Page: basePage,
 	}
 	model.Language = lang
-	model.FeatureFlags.SixteensVersion = "67f6982"
 
 	model.Metadata = coreModel.Metadata{
 		Title:       bulletin.Description.Title,
