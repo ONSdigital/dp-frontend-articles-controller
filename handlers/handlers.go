@@ -46,7 +46,7 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 	}
 
 	basePage := rc.NewBasePageModel()
-	model := mapper.CreateSixteensBulletinModel(basePage, *bulletin, breadcrumbs)
+	model := mapper.CreateSixteensBulletinModel(basePage, *bulletin, breadcrumbs, lang)
 	rc.BuildPage(w, model, "sixteens-bulletin")
 }
 
@@ -74,6 +74,6 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 	}
 
 	basePage := rc.NewBasePageModel()
-	model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs)
+	model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs, lang)
 	rc.BuildPage(w, model, "bulletin")
 }

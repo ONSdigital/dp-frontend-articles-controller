@@ -64,10 +64,11 @@ type Message struct {
 	URI      string `json:"uri"`
 }
 
-func CreateSixteensBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb) BulletinModel {
+func CreateSixteensBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb, lang string) BulletinModel {
 	model := BulletinModel{
 		Page: basePage,
 	}
+	model.Language = lang
 	model.FeatureFlags.SixteensVersion = "67f6982"
 
 	model.Metadata = coreModel.Metadata{
@@ -196,10 +197,11 @@ func CreateSixteensBulletinModel(basePage coreModel.Page, bulletin articles.Bull
 	return model
 }
 
-func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb) BulletinModel {
+func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb, lang string) BulletinModel {
 	model := BulletinModel{
 		Page: basePage,
 	}
+	model.Language = lang
 	model.FeatureFlags.SixteensVersion = "67f6982"
 
 	model.Metadata = coreModel.Metadata{

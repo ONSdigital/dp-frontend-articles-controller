@@ -178,7 +178,7 @@ func TestUnitMapper(t *testing.T) {
 		Convey("When the bulletin URI is not a previous version", func() {
 			bulletin.URI = "the/bulletin/uri/path/version"
 			Convey("CreateSixteensBulletinModel maps correctly", func() {
-				model := CreateSixteensBulletinModel(basePage, bulletin, breadcrumbs)
+				model := CreateSixteensBulletinModel(basePage, bulletin, breadcrumbs, "cy")
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
 				So(model.FeatureFlags.SixteensVersion, ShouldEqual, "67f6982")
@@ -236,7 +236,7 @@ func TestUnitMapper(t *testing.T) {
 		Convey("When the bulletin URI is a previous version", func() {
 			bulletin.URI = "the/bulletin/uri/path/previous/version"
 			Convey("CreateSixteensBulletinModel maps correctly", func() {
-				model := CreateSixteensBulletinModel(basePage, bulletin, breadcrumbs)
+				model := CreateSixteensBulletinModel(basePage, bulletin, breadcrumbs, "cy")
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
 				So(model.FeatureFlags.SixteensVersion, ShouldEqual, "67f6982")
@@ -457,7 +457,7 @@ func TestUnitMapper(t *testing.T) {
 		Convey("When the bulletin URI is not a previous version", func() {
 			bulletin.URI = "the/bulletin/uri/path/version"
 			Convey("CreateBulletinModel maps correctly", func() {
-				model := CreateBulletinModel(basePage, bulletin, breadcrumbs)
+				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy")
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
 				So(model.FeatureFlags.SixteensVersion, ShouldEqual, "67f6982")
@@ -515,7 +515,7 @@ func TestUnitMapper(t *testing.T) {
 		Convey("When the bulletin URI is a previous version", func() {
 			bulletin.URI = "the/bulletin/uri/path/previous/version"
 			Convey("CreateBulletinModel maps correctly", func() {
-				model := CreateBulletinModel(basePage, bulletin, breadcrumbs)
+				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy")
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
 				So(model.FeatureFlags.SixteensVersion, ShouldEqual, "67f6982")
