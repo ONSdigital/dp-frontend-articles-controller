@@ -55,7 +55,8 @@ func TestUnitHandlers(t *testing.T) {
 		})
 	})
 
-	Convey("test GetBulletin", t, func() {
+	Convey("test SixteensBulletin", t, func() {
+		const requestUrlFormat = "http://localhost:26500/sixteens%s"
 		url := "/a/bulletin/url"
 		b := articles.Bulletin{
 			URI:  "/the/bulletin/url",
@@ -67,17 +68,17 @@ func TestUnitHandlers(t *testing.T) {
 		mockConfig := config.Config{}
 
 		router := mux.NewRouter()
-		router.HandleFunc(url, SixteensBulletin(mockConfig, mockRenderClient, mockZebedeeClient, mockArticlesApiClient))
+		router.HandleFunc("/sixteens{uri:/.*}", SixteensBulletin(mockConfig, mockRenderClient, mockZebedeeClient, mockArticlesApiClient))
 
 		w := httptest.NewRecorder()
 
 		Convey("it returns 200 when rendered succesfully", func() {
-			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, "").Return(&b, nil)
+			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, url).Return(&b, nil)
 			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, accessToken, collectionID, lang, b.URI)
 			mockRenderClient.EXPECT().NewBasePageModel()
 			mockRenderClient.EXPECT().BuildPage(w, gomock.Any(), "sixteens-bulletin")
 
-			req := httptest.NewRequest("GET", fmt.Sprintf("http://localhost:26500%s", url), nil)
+			req := httptest.NewRequest("GET", fmt.Sprintf(requestUrlFormat, url), nil)
 			setRequestHeaders(req)
 
 			router.ServeHTTP(w, req)
@@ -86,12 +87,12 @@ func TestUnitHandlers(t *testing.T) {
 		})
 
 		Convey("it returns 200 when rendered succesfully without headers or cookies", func() {
-			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, "", "", lang, "").Return(&b, nil)
+			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, "", "", lang, url).Return(&b, nil)
 			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, "", "", lang, b.URI)
 			mockRenderClient.EXPECT().NewBasePageModel()
 			mockRenderClient.EXPECT().BuildPage(w, gomock.Any(), "sixteens-bulletin")
 
-			req := httptest.NewRequest("GET", fmt.Sprintf("http://localhost:26500%s", url), nil)
+			req := httptest.NewRequest("GET", fmt.Sprintf(requestUrlFormat, url), nil)
 
 			router.ServeHTTP(w, req)
 
@@ -99,9 +100,9 @@ func TestUnitHandlers(t *testing.T) {
 		})
 
 		Convey("it returns 500 when there is an error getting the bulletin from Zebedee", func() {
-			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, "").Return(nil, errors.New(("error reading data")))
+			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, url).Return(nil, errors.New(("error reading data")))
 
-			req := httptest.NewRequest("GET", fmt.Sprintf("http://localhost:26500%s", url), nil)
+			req := httptest.NewRequest("GET", fmt.Sprintf(requestUrlFormat, url), nil)
 			setRequestHeaders(req)
 
 			router.ServeHTTP(w, req)
@@ -110,9 +111,9 @@ func TestUnitHandlers(t *testing.T) {
 		})
 
 		Convey("it returns 500 when there is an error getting the breadcrumbs from Zebedee", func() {
-			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, "").Return(&b, nil)
+			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, url).Return(&b, nil)
 			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, accessToken, collectionID, lang, b.URI).Return([]zebedee.Breadcrumb{}, errors.New(("error reading breadcrumbs")))
-			req := httptest.NewRequest("GET", fmt.Sprintf("http://localhost:26500%s", url), nil)
+			req := httptest.NewRequest("GET", fmt.Sprintf(requestUrlFormat, url), nil)
 			setRequestHeaders(req)
 
 			router.ServeHTTP(w, req)
