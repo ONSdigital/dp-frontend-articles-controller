@@ -1,1 +1,10 @@
-<h1>{{ localise "ReleaseDate" .Language 1 }}</h1>
+<div class="ons-page__container ons-container bulletin">
+  {{ template "partials/breadcrumb" . }}
+
+  <h1 class="ons-u-fs-xxxl ons-u-mt-s">
+    {{- .Page.Metadata.Title -}}
+  </h1>
+
+  {{ template "partials/bulletin/status-header" . }}
+  {{ template "partials/bulletin/contents" . }}
+</div>

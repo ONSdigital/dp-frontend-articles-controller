@@ -1,6 +1,7 @@
 package mapper
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -326,9 +327,44 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 		})
 	}
 
+	// TODO: model.Accordion?
+	model.TableOfContents = createTableOfContents(model.Sections)
+
 	return model
 }
 
 func parentPath(p string) string {
 	return p[:strings.LastIndex(p, "/")]
+}
+
+func createTableOfContents(documentSections []Section) coreModel.TableOfContents {
+	toc := coreModel.TableOfContents{
+		AriaLabel: coreModel.Localisation{
+			LocaleKey: "TableOfContents",
+			Plural:    1,
+		},
+		Title: coreModel.Localisation{
+			LocaleKey: "Contents",
+			Plural:    1,
+		},
+	}
+
+	sections := make(map[string]coreModel.ContentSection)
+	displayOrder := make([]string, 0)
+
+	for sectionIndex, section := range documentSections {
+		sectionId := fmt.Sprintf("section-%d", sectionIndex)
+		sections[sectionId] = coreModel.ContentSection{
+			Current: false,
+			Title: coreModel.Localisation{
+				Text: section.Title,
+			},
+		}
+		displayOrder = append(displayOrder, sectionId)
+	}
+
+	toc.Sections = sections
+	toc.DisplayOrder = displayOrder
+
+	return toc
 }
