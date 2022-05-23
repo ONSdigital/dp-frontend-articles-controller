@@ -6,13 +6,15 @@ import (
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/articles"
 	"github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
+	"github.com/ONSdigital/dp-frontend-articles-controller/mocks"
+	"github.com/ONSdigital/dp-renderer/helper"
 	coreModel "github.com/ONSdigital/dp-renderer/model"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestUnitMapper(t *testing.T) {
-
+	helper.InitialiseLocalisationsHelper(mocks.MockAssetFunction)
 	Convey("Given a bulletin, basePage and breadcrumbs", t, func() {
 		basePage := coreModel.NewPage("path/to/assets", "site-domain")
 
@@ -506,7 +508,11 @@ func TestUnitMapper(t *testing.T) {
 				So(len(model.Breadcrumb), ShouldEqual, len(breadcrumbs))
 				for i, b := range breadcrumbs {
 					found := model.Breadcrumb[i]
-					So(found.Title, ShouldEqual, b.Description.Title)
+					if i == 0 && b.Description.Title == "Home" {
+						So(found.Title, ShouldEqual, "Hafan")
+					} else {
+						So(found.Title, ShouldEqual, b.Description.Title)
+					}
 					So(found.URI, ShouldEqual, b.URI)
 				}
 			})
@@ -562,7 +568,11 @@ func TestUnitMapper(t *testing.T) {
 				So(len(model.Breadcrumb), ShouldEqual, len(breadcrumbs))
 				for i, b := range breadcrumbs {
 					found := model.Breadcrumb[i]
-					So(found.Title, ShouldEqual, b.Description.Title)
+					if i == 0 && b.Description.Title == "Home" {
+						So(found.Title, ShouldEqual, "Hafan")
+					} else {
+						So(found.Title, ShouldEqual, b.Description.Title)
+					}
 					So(found.URI, ShouldEqual, b.URI)
 				}
 			})
