@@ -461,6 +461,7 @@ func TestUnitMapper(t *testing.T) {
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
 				So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
+				So(model.BetaBannerEnabled, ShouldBeTrue)
 				So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
 				So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
 				So(model.Metadata.Keywords, ShouldResemble, bulletin.Description.Keywords)
