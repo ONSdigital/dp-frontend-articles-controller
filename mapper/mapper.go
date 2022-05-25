@@ -205,7 +205,7 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 	}
 	model.Language = lang
 	model.BetaBannerEnabled = true
-
+	model.Type = bulletin.Type
 	model.Metadata = coreModel.Metadata{
 		Title:       bulletin.Description.Title,
 		Description: bulletin.Description.MetaDescription,

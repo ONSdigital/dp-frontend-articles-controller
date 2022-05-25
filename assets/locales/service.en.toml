@@ -112,3 +112,11 @@ other = "Corrections"
 [BreadcrumbHome]
 description = "Home"
 one = "Home"
+
+[DocumentTypeArticle]
+description = "Article"
+one = "Article"
+
+[DocumentTypeBulletin]
+description = "Bulletin"
+one = "Bulletin"

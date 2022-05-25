@@ -298,6 +298,7 @@ func TestUnitMapper(t *testing.T) {
 		basePage := coreModel.NewPage("path/to/assets", "site-domain")
 
 		bulletin := articles.Bulletin{
+			Type: "bulletin",
 			Description: zebedee.Description{
 				Title:             "Title",
 				Edition:           "2021",
