@@ -106,3 +106,9 @@ other = "Notices"
 description = "Correction"
 one = "Correction"
 other = "Corrections"
+
+#-- ONS Design System
+
+[BreadcrumbHome]
+description = "Home"
+one = "Hafan"

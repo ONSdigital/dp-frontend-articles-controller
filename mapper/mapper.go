@@ -7,6 +7,7 @@ import (
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/articles"
 	"github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
+	"github.com/ONSdigital/dp-renderer/helper"
 	coreModel "github.com/ONSdigital/dp-renderer/model"
 )
 
@@ -321,12 +322,7 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 	}
 	sort.Slice(model.Alerts, func(i, j int) bool { return model.Alerts[i].Date > model.Alerts[j].Date })
 
-	for _, bc := range bcs {
-		model.Page.Breadcrumb = append(model.Page.Breadcrumb, coreModel.TaxonomyNode{
-			Title: bc.Description.Title,
-			URI:   bc.URI,
-		})
-	}
+	model.Page.Breadcrumb = mapBreadcrumbTrail(bcs, model.Language)
 
 	// TODO: model.Accordion?
 	model.TableOfContents = createTableOfContents(model.Sections)
@@ -368,4 +364,21 @@ func createTableOfContents(documentSections []Section) coreModel.TableOfContents
 	toc.DisplayOrder = displayOrder
 
 	return toc
+}
+
+func mapBreadcrumbTrail(crumbs []zebedee.Breadcrumb, language string) []coreModel.TaxonomyNode {
+	trail := []coreModel.TaxonomyNode{}
+
+	for _, crumb := range crumbs {
+		trail = append(trail, coreModel.TaxonomyNode{
+			Title: crumb.Description.Title,
+			URI:   crumb.URI,
+		})
+	}
+
+	if len(trail) > 0 && trail[0].Title == "Home" {
+		trail[0].Title = helper.Localise("BreadcrumbHome", language, 1)
+	}
+
+	return trail
 }
