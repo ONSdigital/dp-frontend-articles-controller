@@ -112,3 +112,11 @@ other = "Corrections"
 [BreadcrumbHome]
 description = "Home"
 one = "Home"
+
+[StatusLineReleased]
+description = "Released"
+one = "Released"
+
+[StatusLinePreviousReleases]
+description = "View previous releases"
+one = "View previous releases"

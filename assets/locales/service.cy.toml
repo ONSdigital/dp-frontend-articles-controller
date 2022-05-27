@@ -112,3 +112,11 @@ other = "Corrections"
 [BreadcrumbHome]
 description = "Home"
 one = "Hafan"
+
+[StatusLineReleased]
+description = "Released"
+one = "Rhyddhawyd"
+
+[StatusLinePreviousReleases]
+description = "View previous releases"
+one = "Gweld datganiadau blaenorol"
