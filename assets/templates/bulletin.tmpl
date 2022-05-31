@@ -1,7 +1,15 @@
 <div class="ons-page__container ons-container bulletin">
   {{ template "partials/breadcrumb" . }}
 
-  <h1 class="ons-u-fs-xxxl ons-u-mt-s ons-u-mb-m">
+  <div class="ons-u-fs-m ons-u-mt-s ons-u-pb-xxs bulletin__document-type">
+    {{- if eq .Type "article" -}}
+      {{- localise "DocumentTypeArticle" .Language 1 -}}
+    {{- else -}}
+      {{- localise "DocumentTypeBulletin" .Language 1 -}}
+    {{- end -}}
+  </div>
+
+  <h1 class="ons-u-fs-xxxl ons-u-mb-m">
     {{- .Page.Metadata.Title -}}
   </h1>
 
