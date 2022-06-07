@@ -120,3 +120,11 @@ one = "Article"
 [DocumentTypeBulletin]
 description = "Bulletin"
 one = "Bulletin"
+
+[StatusLineReleased]
+description = "Released"
+one = "Released"
+
+[StatusLinePreviousReleases]
+description = "View previous releases"
+one = "View previous releases"

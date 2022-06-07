@@ -3,7 +3,7 @@
     <!-- Left column -->
     <div class="ons-grid__col ons-col-4@m ons-u-p-no">
       <div class="ons-pl-grid-col">
-        <span class="ons-u-fs-r--b">Released:</span>
+        <span class="ons-u-fs-r--b">{{ localise "StatusLineReleased" .Language 1 }}:</span>
         <span>{{ dateTimeOnsDatePatternFormat .ReleaseDate }}</span>
       </div>
     </div>
@@ -12,7 +12,7 @@
     <div class="ons-grid__col ons-col-8@m">
       <div class="ons-pl-grid-col">
         <span class="ons-u-fs-r--b">LATEST</span>
-        <a href="">View previous releases</a>
+        <a href="">{{ localise "StatusLinePreviousReleases" .Language 1 }}</a>
       </div>
     </div>
   </div>
