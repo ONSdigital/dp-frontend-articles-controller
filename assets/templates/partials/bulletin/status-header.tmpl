@@ -11,8 +11,22 @@
     <!-- Right column -->
     <div class="ons-grid__col ons-col-8@m">
       <div class="ons-pl-grid-col">
-        <span class="ons-u-fs-r--b">LATEST</span>
-        <a href="">{{ localise "StatusLineViewPreviousReleases" .Language 4 }}</a>
+        {{ if .CorrectedPath }}
+          <span class="ons-u-fs-r--b">{{ localise "StatusLineReleaseSuperseded" .Language 1 }}</span>
+          <a href="{{ .CorrectedPath }}">
+            {{- localise "StatusLineViewCorrectedVersion" .Language 1 -}}
+          </a>
+        {{ else if .LatestRelease }}
+          <span class="ons-u-fs-r--b">{{ localise "StatusLineReleaseLatest" .Language 1 }}</span>
+          <a href="{{ .ParentPath }}/previousReleases">
+            {{- localise "StatusLineViewPreviousReleases" .Language 4 -}}
+          </a>
+        {{ else }}
+          <span class="ons-u-fs-r--b">{{ localise "StatusLineReleaseOutdated" .Language 1 }}</span>
+          <a href="{{ .LatestReleaseUri }}">
+            {{- localise "StatusLineViewLatestRelease" .Language 1 -}}
+          </a>
+        {{ end }}
       </div>
     </div>
   </div>
