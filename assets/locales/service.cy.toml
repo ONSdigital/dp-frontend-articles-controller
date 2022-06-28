@@ -138,13 +138,13 @@ description = "View latest release"
 one = "View latest release (cy)"
 
 [StatusLineReleaseLatest]
-description = "LATEST"
-one = "DIWEDDARAF"
+description = "Latest"
+one = "Diweddaraf"
 
 [StatusLineReleaseSuperseded]
-description = "SUPERSEDED"
-one = "SUPERSEDED (cy)"
+description = "Superseded"
+one = "Superseded (cy)"
 
 [StatusLineReleaseOutdated]
-description = "OUTDATED"
-one = "OUTDATED (cy)"
+description = "Outdated"
+one = "Outdated (cy)"
