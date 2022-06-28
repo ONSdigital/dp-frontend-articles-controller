@@ -12,6 +12,7 @@
     <div class="ons-grid__col ons-col-8@m">
       <div class="ons-pl-grid-col">
         {{ if .CorrectedPath }}
+          {{/* Detect an old version of a release and link to the latest version */}}
           <span class="ons-u-fs-r--b">{{ localise "StatusLineReleaseSuperseded" .Language 1 }}</span>
           <a href="{{ .CorrectedPath }}">
             {{- localise "StatusLineViewCorrectedVersion" .Language 1 -}}
@@ -22,6 +23,7 @@
             {{- localise "StatusLineViewPreviousReleases" .Language 4 -}}
           </a>
         {{ else }}
+          {{/* Detect an old edition of a release and link to the latest edition */}}
           <span class="ons-u-fs-r--b">{{ localise "StatusLineReleaseOutdated" .Language 1 }}</span>
           <a href="{{ .LatestReleaseUri }}">
             {{- localise "StatusLineViewLatestRelease" .Language 1 -}}
