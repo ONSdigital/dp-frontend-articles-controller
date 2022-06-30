@@ -128,3 +128,7 @@ one = "Rhyddhawyd"
 [StatusLinePreviousReleases]
 description = "View previous releases"
 one = "Gweld datganiadau blaenorol"
+
+[PageContentsTitle]
+description = "Page contents"
+one = "Cynnwys y dudalen"

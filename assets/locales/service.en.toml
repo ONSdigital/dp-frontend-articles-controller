@@ -128,3 +128,7 @@ one = "Released"
 [StatusLinePreviousReleases]
 description = "View previous releases"
 one = "View previous releases"
+
+[PageContentsTitle]
+description = "Page contents"
+one = "Page contents"

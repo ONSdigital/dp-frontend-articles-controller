@@ -341,7 +341,7 @@ func createTableOfContents(documentSections []Section) coreModel.TableOfContents
 			Plural:    1,
 		},
 		Title: coreModel.Localisation{
-			LocaleKey: "Contents",
+			LocaleKey: "PageContentsTitle",
 			Plural:    1,
 		},
 	}
