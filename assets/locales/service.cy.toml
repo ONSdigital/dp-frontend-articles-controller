@@ -129,6 +129,34 @@ one = "Rhyddhawyd"
 description = "View previous releases"
 one = "Gweld datganiadau blaenorol"
 
+[PageActionsTitle]
+description = "Gweithredoedd y dudalen"
+other = "Gweithredoedd y dudalen"
+
+[PageActionTweet]
+description = "Tweet"
+one = "Trydariad"
+
+[PageActionLinkedIn]
+description = "LinkedIn"
+one = "LinkedIn"
+
+[PageActionEmail]
+description = "Email"
+one = "E-bost"
+
+[PageActionCopyLink]
+description = "Copy link"
+one = "Copïo'r ddolen"
+
+[PageActionDownloadPDF]
+description = "Download PDF"
+one = "Lawrlwytho fel PDF"
+
+[PageActionPrint]
+description = "Print"
+one = "Argraffu"
+
 [PageContentsTitle]
 description = "Page contents"
 one = "Cynnwys y dudalen"

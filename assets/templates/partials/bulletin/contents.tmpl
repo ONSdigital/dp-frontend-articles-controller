@@ -2,12 +2,7 @@
   <!-- Left column -->
   <div class="ons-grid__col ons-grid__col--sticky@m ons-col-4@m ons-u-p-no">
     {{ template "partials/table-of-contents" . }}
-    <div class="ons-u-mb-l">
-      <h2 class="ons-u-fs-r--b ons-u-mb-s">Page actions</h2>
-      <div>Share</div>
-      <div>Download</div>
-      <div>Print</div>
-    </div>
+    {{ template "partials/bulletin/page-actions/list" . }}
   </div>
 
   <!-- Right column -->

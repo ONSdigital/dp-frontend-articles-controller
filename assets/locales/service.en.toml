@@ -129,6 +129,34 @@ one = "Released"
 description = "View previous releases"
 one = "View previous releases"
 
+[PageActionsTitle]
+description = "Page actions"
+other = "Page actions"
+
+[PageActionTweet]
+description = "Tweet"
+one = "Tweet"
+
+[PageActionLinkedIn]
+description = "LinkedIn"
+one = "LinkedIn"
+
+[PageActionEmail]
+description = "Email"
+one = "Email"
+
+[PageActionCopyLink]
+description = "Copy link"
+one = "Copy link"
+
+[PageActionDownloadPDF]
+description = "Download PDF"
+one = "Download PDF"
+
+[PageActionPrint]
+description = "Print"
+one = "Print"
+
 [PageContentsTitle]
 description = "Page contents"
 one = "Page contents"
