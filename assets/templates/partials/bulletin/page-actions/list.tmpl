@@ -1,0 +1,55 @@
+<aside class="ons-u-mb-l">
+  <h2 class="ons-u-fs-r--b ons-u-mb-s">
+    {{- localise "PageActionsTitle" .Language 4 -}}
+  </h2>
+  <ul class="ons-list ons-list--bare ons-list--icons">
+    <li class="ons-list__item">
+      <span class="ons-list__prefix">
+        {{ template "icons/twitter" }}
+      </span>
+      <a href="">
+        {{- localise "PageActionTweet" .Language 1 -}}
+      </a>
+    </li>
+    <li class="ons-list__item">
+      <span class="ons-list__prefix">
+        {{ template "icons/linkedin" }}
+      </span>
+      <a href="">
+        {{- localise "PageActionLinkedIn" .Language 1 -}}
+      </a>
+    </li>
+    <li class="ons-list__item">
+      <span class="ons-list__prefix">
+        {{ template "icons/email" }}
+      </span>
+      <a href="">
+        {{- localise "PageActionEmail" .Language 1 -}}
+      </a>
+    </li>
+    <li class="ons-list__item">
+      <span class="ons-list__prefix">
+        {{ template "icons/copy-link" }}
+      </span>
+      <a href="">
+        {{- localise "PageActionCopyLink" .Language 1 -}}
+      </a>
+    </li>
+    <li class="ons-list__item">
+      <span class="ons-list__prefix page-action__icon--no-roundel">
+        {{ template "icons/download" }}
+      </span>
+      <a href="{{ .URI }}/pdf">
+        {{- localise "PageActionDownloadPDF" .Language 1 -}}
+      </a>
+    </li>
+    <li class="ons-list__item">
+      <span class="ons-list__prefix page-action__icon--no-roundel">
+        {{ template "icons/print" }}
+      </span>
+      <a href="">
+        {{- localise "PageActionPrint" .Language 1 -}}
+      </a>
+    </li>
+  </ul>
+</aside>
