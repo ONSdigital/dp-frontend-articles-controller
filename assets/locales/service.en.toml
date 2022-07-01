@@ -156,3 +156,7 @@ one = "Download PDF"
 [PageActionPrint]
 description = "Print"
 one = "Print"
+
+[PageContentsTitle]
+description = "Page contents"
+one = "Page contents"

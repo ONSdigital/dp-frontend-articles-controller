@@ -156,3 +156,7 @@ one = "Lawrlwytho fel PDF"
 [PageActionPrint]
 description = "Print"
 one = "Argraffu"
+
+[PageContentsTitle]
+description = "Page contents"
+one = "Cynnwys y dudalen"
