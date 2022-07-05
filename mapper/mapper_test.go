@@ -1,6 +1,7 @@
 package mapper
 
 import (
+	"fmt"
 	"sort"
 	"testing"
 
@@ -578,6 +579,50 @@ func TestUnitMapper(t *testing.T) {
 					So(found.URI, ShouldEqual, b.URI)
 				}
 			})
+		})
+	})
+
+	Convey("FuncLookupSection", t, func() {
+		basePage := coreModel.NewPage("path/to/assets", "site-domain")
+
+		Convey("Should detect a normal section", func() {
+			model := BulletinModel{
+				Page: basePage,
+			}
+
+			sectionType := "section"
+			sectionIndex := 10
+			id := fmt.Sprintf("%s-%d", sectionType, sectionIndex)
+			ref, err := model.FuncLookupSection(id)
+
+			So(err, ShouldBeNil)
+			So(ref.Type, ShouldEqual, sectionType)
+			So(ref.Index, ShouldEqual, sectionIndex)
+		})
+
+		Convey("Should detect an accordion section", func() {
+			model := BulletinModel{
+				Page: basePage,
+			}
+
+			sectionType := "accordion"
+			sectionIndex := 10
+			id := fmt.Sprintf("%s-%d", sectionType, sectionIndex)
+			ref, err := model.FuncLookupSection(id)
+
+			So(err, ShouldBeNil)
+			So(ref.Type, ShouldEqual, sectionType)
+			So(ref.Index, ShouldEqual, sectionIndex)
+		})
+
+		Convey("Should return an error otherwise", func() {
+			model := BulletinModel{
+				Page: basePage,
+			}
+
+			_, err := model.FuncLookupSection("mystery-10")
+
+			So(err, ShouldBeError)
 		})
 	})
 }

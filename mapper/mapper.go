@@ -2,7 +2,9 @@ package mapper
 
 import (
 	"fmt"
+	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/articles"
@@ -324,8 +326,7 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 
 	model.Page.Breadcrumb = mapBreadcrumbTrail(bcs, model.Language)
 
-	// TODO: model.Accordion?
-	model.TableOfContents = createTableOfContents(model.Sections)
+	model.TableOfContents = createTableOfContents(model.Sections, model.Accordion)
 
 	return model
 }
@@ -334,7 +335,8 @@ func parentPath(p string) string {
 	return p[:strings.LastIndex(p, "/")]
 }
 
-func createTableOfContents(documentSections []Section) coreModel.TableOfContents {
+// Sections are always followed by Accordions
+func createTableOfContents(documentSections, documentAccordions []Section) coreModel.TableOfContents {
 	toc := coreModel.TableOfContents{
 		AriaLabel: coreModel.Localisation{
 			LocaleKey: "TableOfContents",
@@ -346,24 +348,50 @@ func createTableOfContents(documentSections []Section) coreModel.TableOfContents
 		},
 	}
 
-	sections := make(map[string]coreModel.ContentSection)
-	displayOrder := make([]string, 0)
-
-	for sectionIndex, section := range documentSections {
-		sectionId := fmt.Sprintf("section-%d", sectionIndex)
-		sections[sectionId] = coreModel.ContentSection{
-			Current: false,
-			Title: coreModel.Localisation{
-				Text: section.Title,
-			},
+	appendSections := func(list *[]Section, listType string, sections map[string]coreModel.ContentSection, displayOrder *[]string) {
+		for sectionIndex, section := range *list {
+			sectionId := fmt.Sprintf("%s-%d", listType, sectionIndex)
+			sections[sectionId] = coreModel.ContentSection{
+				Current: false,
+				Title: coreModel.Localisation{
+					Text: section.Title,
+				},
+			}
+			*displayOrder = append(*displayOrder, sectionId)
 		}
-		displayOrder = append(displayOrder, sectionId)
 	}
 
+	sections := make(map[string]coreModel.ContentSection)
+	displayOrder := make([]string, 0)
+	appendSections(&documentSections, "section", sections, &displayOrder)
+	appendSections(&documentAccordions, "accordion", sections, &displayOrder)
 	toc.Sections = sections
 	toc.DisplayOrder = displayOrder
-
 	return toc
+}
+
+type SectionReference struct {
+	Type  string
+	Index int
+}
+
+// Lookup section by the id used in the TableOfContents.DisplayOrder
+func (bulletin BulletinModel) FuncLookupSection(id string) (SectionReference, error) {
+	def := `(section|accordion)-(\d+)`
+	re := regexp.MustCompile(def)
+	matches := re.FindStringSubmatch(id)
+	if matches == nil {
+		err := fmt.Errorf(`unknown section type in id "%s"`, id)
+		return SectionReference{}, err
+	}
+	index, err := strconv.Atoi(matches[2])
+	if err != nil {
+		return SectionReference{}, err
+	}
+	return SectionReference{
+		Type:  matches[1],
+		Index: index,
+	}, nil
 }
 
 func mapBreadcrumbTrail(crumbs []zebedee.Breadcrumb, language string) []coreModel.TaxonomyNode {
