@@ -125,9 +125,29 @@ one = "Bwletin"
 description = "Released"
 one = "Rhyddhawyd"
 
-[StatusLinePreviousReleases]
+[StatusLineViewPreviousReleases]
 description = "View previous releases"
-one = "Gweld datganiadau blaenorol"
+other = "Gweld datganiadau blaenorol"
+
+[StatusLineViewCorrectedVersion]
+description = "View corrected version"
+one = "View corrected version (cy)"
+
+[StatusLineViewLatestRelease]
+description = "View latest release"
+one = "View latest release (cy)"
+
+[StatusLineReleaseLatest]
+description = "Latest"
+one = "Diweddaraf"
+
+[StatusLineReleaseSuperseded]
+description = "Superseded"
+one = "Superseded (cy)"
+
+[StatusLineReleaseOutdated]
+description = "Outdated"
+one = "Outdated (cy)"
 
 [PageActionsTitle]
 description = "Gweithredoedd y dudalen"

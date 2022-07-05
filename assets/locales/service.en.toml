@@ -125,9 +125,29 @@ one = "Bulletin"
 description = "Released"
 one = "Released"
 
-[StatusLinePreviousReleases]
+[StatusLineViewPreviousReleases]
 description = "View previous releases"
-one = "View previous releases"
+other = "View previous releases"
+
+[StatusLineViewCorrectedVersion]
+description = "View corrected version"
+one = "View corrected version"
+
+[StatusLineViewLatestRelease]
+description = "View latest release"
+one = "View latest release"
+
+[StatusLineReleaseLatest]
+description = "Latest"
+one = "Latest"
+
+[StatusLineReleaseSuperseded]
+description = "Superseded"
+one = "Superseded"
+
+[StatusLineReleaseOutdated]
+description = "Outdated"
+one = "Outdated"
 
 [PageActionsTitle]
 description = "Page actions"
