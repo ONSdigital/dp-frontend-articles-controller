@@ -1,18 +1,9 @@
-<div class="ons-u-mb-xl">
-  <div class="ons-grid ons-u-ml-no">
-    <!-- Left column -->
-    <div class="ons-grid__col ons-col-4@m ons-u-p-no">
-      <div class="ons-pl-grid-col">
-        <span class="ons-u-fs-r--b">{{ localise "StatusLineReleased" .Language 1 }}:</span>
-        <span>{{ dateTimeOnsDatePatternFormat .ReleaseDate .Language }}</span>
-      </div>
-    </div>
-
-    <!-- Right column -->
-    <div class="ons-grid__col ons-col-8@m">
-      <div class="ons-pl-grid-col">
-        {{ template "partials/bulletin/status-header/edition-version" . }}
-      </div>
-    </div>
-  </div>
-</div>
+<ul class="ons-list ons-list--bare ons-list--inline ons-u-mb-xl">
+  <li class="ons-list__item ons-u-mr-xs@xs ons-u-mb-xs@xxs@m">
+    <span class="ons-u-fs-r--b">{{ localise "StatusLineReleased" .Language 1 }}:</span>
+    <span class="ons-u-nowrap">{{ dateTimeOnsDatePatternFormat .ReleaseDate .Language }}</span>
+  </li>
+  <li class="ons-list__item">
+    {{ template "partials/bulletin/status-header/edition-version" . }}
+  </li>
+</ul>
