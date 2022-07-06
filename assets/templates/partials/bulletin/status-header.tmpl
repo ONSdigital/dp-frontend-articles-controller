@@ -1,9 +1,12 @@
 <ul class="ons-list ons-list--bare ons-list--inline ons-u-mb-xl">
-  <li class="ons-list__item ons-u-mr-xs@xs ons-u-mb-xs@xxs@m">
+  <li class="ons-list__item ons-u-mr-xs@xs">
     <span class="ons-u-fs-r--b">{{ localise "StatusLineReleased" .Language 1 }}:</span>
     <span class="ons-u-nowrap">{{ dateTimeOnsDatePatternFormat .ReleaseDate .Language }}</span>
   </li>
-  <li class="ons-list__item">
-    {{ template "partials/bulletin/status-header/edition-version" . }}
+  <li class="ons-list__item ons-u-mt-xs@xxs@m ons-u-mr-s@xxs@m ons-u-mr-l@m">
+    {{ template "partials/bulletin/status-header/edition-version-sticker" . }}
+  </li>
+  <li class="ons-list__item ons-u-mt-xs@xxs@m">
+    {{ template "partials/bulletin/status-header/edition-version-link" . }}
   </li>
 </ul>
