@@ -11,30 +11,7 @@
     <!-- Right column -->
     <div class="ons-grid__col ons-col-8@m">
       <div class="ons-pl-grid-col">
-        {{ if .CorrectedPath }}
-          {{/* Detect an old version of a release and link to the latest version */}}
-          <span class="ons-sticker ons-u-fs-s--b ons-u-tt-u ons-u-mr-s@xxs@m ons-u-mr-l@m">
-            {{- localise "StatusLineReleaseSuperseded" .Language 1 -}}
-          </span>
-          <a href="{{ .CorrectedPath }}">
-            {{- localise "StatusLineViewCorrectedVersion" .Language 1 -}}
-          </a>
-        {{ else if .LatestRelease }}
-          <span class="ons-sticker ons-u-fs-s--b ons-u-tt-u ons-u-mr-s@xxs@m ons-u-mr-l@m">
-            {{- localise "StatusLineReleaseLatest" .Language 1 -}}
-          </span>
-          <a href="{{ .ParentPath }}/previousReleases">
-            {{- localise "StatusLineViewPreviousReleases" .Language 4 -}}
-          </a>
-        {{ else }}
-          {{/* Detect an old edition of a release and link to the latest edition */}}
-          <span class="ons-sticker ons-u-fs-s--b ons-u-tt-u ons-u-mr-s@xxs@m ons-u-mr-l@m">
-            {{- localise "StatusLineReleaseOutdated" .Language 1 -}}
-          </span>
-          <a href="{{ .LatestReleaseUri }}">
-            {{- localise "StatusLineViewLatestRelease" .Language 1 -}}
-          </a>
-        {{ end }}
+        {{ template "partials/bulletin/status-header/edition-version" . }}
       </div>
     </div>
   </div>
