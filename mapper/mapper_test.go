@@ -1,7 +1,6 @@
 package mapper
 
 import (
-	"fmt"
 	"sort"
 	"testing"
 
@@ -544,6 +543,7 @@ func TestUnitMapper(t *testing.T) {
 				So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 				assertSections(model.Sections, bulletin.Sections)
 				assertSections(model.Accordion, bulletin.Accordion)
+				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion)
 				assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
 				assertLinks(model.RelatedData, bulletin.RelatedData)
 				assertLinks(model.Links, bulletin.Links)
@@ -581,50 +581,18 @@ func TestUnitMapper(t *testing.T) {
 			})
 		})
 	})
+}
 
-	Convey("FuncLookupSection", t, func() {
-		basePage := coreModel.NewPage("path/to/assets", "site-domain")
-
-		Convey("Should detect a normal section", func() {
-			model := BulletinModel{
-				Page: basePage,
-			}
-
-			sectionType := "section"
-			sectionIndex := 10
-			id := fmt.Sprintf("%s-%d", sectionType, sectionIndex)
-			ref, err := model.FuncLookupSection(id)
-
-			So(err, ShouldBeNil)
-			So(ref.Type, ShouldEqual, sectionType)
-			So(ref.Index, ShouldEqual, sectionIndex)
-		})
-
-		Convey("Should detect an accordion section", func() {
-			model := BulletinModel{
-				Page: basePage,
-			}
-
-			sectionType := "accordion"
-			sectionIndex := 10
-			id := fmt.Sprintf("%s-%d", sectionType, sectionIndex)
-			ref, err := model.FuncLookupSection(id)
-
-			So(err, ShouldBeNil)
-			So(ref.Type, ShouldEqual, sectionType)
-			So(ref.Index, ShouldEqual, sectionIndex)
-		})
-
-		Convey("Should return an error otherwise", func() {
-			model := BulletinModel{
-				Page: basePage,
-			}
-
-			_, err := model.FuncLookupSection("mystery-10")
-
-			So(err, ShouldBeError)
-		})
-	})
+func assertContentsView(found []ViewSection, expectedSections, expectedAccordion []zebedee.Section) {
+	totalSections := len(expectedSections)
+	totalAccordions := len(expectedAccordion)
+	So(len(found), ShouldEqual, totalSections+totalAccordions)
+	for i := range expectedSections {
+		So(found[i].Type, ShouldEqual, "section")
+	}
+	for i := range expectedAccordion {
+		So(found[totalAccordions+i].Type, ShouldEqual, "accordion")
+	}
 }
 
 func assertSections(found []Section, expected []zebedee.Section) {

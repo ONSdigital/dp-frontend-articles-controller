@@ -2,18 +2,11 @@
   <div class="ons-u-mb-l">
     <a href="">Read long version</a>
   </div>
-  {{ range $tocSectionId := .TableOfContents.DisplayOrder }}
-    {{ $tocSection := index $.TableOfContents.Sections $tocSectionId }}
-    <section id="{{ $tocSectionId }}">
-      <h2>{{ $tocSection.Title.FuncLocalise $.Language }}</h2>
-      {{ $sectionRef := $.FuncLookupSection $tocSectionId }}
-      {{ if eq $sectionRef.Type "section" }}
-        {{ $content := index $.Sections $sectionRef.Index }}
-        {{ markdown $content.Markdown }}
-      {{ else if eq $sectionRef.Type "accordion" }}
-        {{ $content := index $.Accordion $sectionRef.Index }}
-        {{ markdown $content.Markdown }}
-      {{ end }}
+  {{ range $sectionView := .ContentsView }}
+    <section id="{{ $sectionView.Id }}">
+      {{ $content := index $sectionView.Source $sectionView.Index }}
+      <h2>{{ $content.Title }}</h2>
+      {{ markdown $content.Markdown }}
     </section>
   {{ end }}
 </div>
