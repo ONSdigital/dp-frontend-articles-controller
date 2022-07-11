@@ -1,0 +1,15 @@
+{{ if .CorrectedPath }}
+  {{/* Detect an old version of a release and link to the latest version */}}
+  <a class="ons-u-nowrap" href="{{ .CorrectedPath }}">
+    {{- localise "StatusLineViewCorrectedVersion" .Language 1 -}}
+  </a>
+{{ else if .LatestRelease }}
+  <a class="ons-u-nowrap" href="{{ .ParentPath }}/previousReleases">
+    {{- localise "StatusLineViewPreviousReleases" .Language 4 -}}
+  </a>
+{{ else }}
+  {{/* Detect an old edition of a release and link to the latest edition */}}
+  <a class="ons-u-nowrap" href="{{ .LatestReleaseUri }}">
+    {{- localise "StatusLineViewLatestRelease" .Language 1 -}}
+  </a>
+{{ end }}

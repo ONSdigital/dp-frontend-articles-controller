@@ -1,0 +1,15 @@
+{{ if .CorrectedPath }}
+  {{/* Detect an old version of a release and link to the latest version */}}
+  <span class="ons-sticker ons-u-fs-s--b ons-u-tt-u ons-u-nowrap">
+    {{- localise "StatusLineReleaseSuperseded" .Language 1 -}}
+  </span>
+{{ else if .LatestRelease }}
+  <span class="ons-sticker ons-u-fs-s--b ons-u-tt-u ons-u-nowrap">
+    {{- localise "StatusLineReleaseLatest" .Language 1 -}}
+  </span>
+{{ else }}
+  {{/* Detect an old edition of a release and link to the latest edition */}}
+  <span class="ons-sticker ons-u-fs-s--b ons-u-tt-u ons-u-nowrap">
+    {{- localise "StatusLineReleaseOutdated" .Language 1 -}}
+  </span>
+{{ end }}

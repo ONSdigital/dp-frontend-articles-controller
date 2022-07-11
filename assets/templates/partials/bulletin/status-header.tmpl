@@ -1,41 +1,12 @@
-<div class="ons-u-mb-xl">
-  <div class="ons-grid ons-u-ml-no">
-    <!-- Left column -->
-    <div class="ons-grid__col ons-col-4@m ons-u-p-no">
-      <div class="ons-pl-grid-col">
-        <span class="ons-u-fs-r--b">{{ localise "StatusLineReleased" .Language 1 }}:</span>
-        <span>{{ dateTimeOnsDatePatternFormat .ReleaseDate .Language }}</span>
-      </div>
-    </div>
-
-    <!-- Right column -->
-    <div class="ons-grid__col ons-col-8@m">
-      <div class="ons-pl-grid-col">
-        {{ if .CorrectedPath }}
-          {{/* Detect an old version of a release and link to the latest version */}}
-          <span class="ons-sticker ons-u-fs-s--b ons-u-tt-u ons-u-mr-s@xxs@m ons-u-mr-l@m">
-            {{- localise "StatusLineReleaseSuperseded" .Language 1 -}}
-          </span>
-          <a href="{{ .CorrectedPath }}">
-            {{- localise "StatusLineViewCorrectedVersion" .Language 1 -}}
-          </a>
-        {{ else if .LatestRelease }}
-          <span class="ons-sticker ons-u-fs-s--b ons-u-tt-u ons-u-mr-s@xxs@m ons-u-mr-l@m">
-            {{- localise "StatusLineReleaseLatest" .Language 1 -}}
-          </span>
-          <a href="{{ .ParentPath }}/previousReleases">
-            {{- localise "StatusLineViewPreviousReleases" .Language 4 -}}
-          </a>
-        {{ else }}
-          {{/* Detect an old edition of a release and link to the latest edition */}}
-          <span class="ons-sticker ons-u-fs-s--b ons-u-tt-u ons-u-mr-s@xxs@m ons-u-mr-l@m">
-            {{- localise "StatusLineReleaseOutdated" .Language 1 -}}
-          </span>
-          <a href="{{ .LatestReleaseUri }}">
-            {{- localise "StatusLineViewLatestRelease" .Language 1 -}}
-          </a>
-        {{ end }}
-      </div>
-    </div>
-  </div>
-</div>
+<ul class="ons-list ons-list--bare ons-list--inline ons-u-mb-xl">
+  <li class="ons-list__item ons-u-mr-xs@xs">
+    <span class="ons-u-fs-r--b">{{ localise "StatusLineReleased" .Language 1 }}:</span>
+    <span class="ons-u-nowrap">{{ dateTimeOnsDatePatternFormat .ReleaseDate .Language }}</span>
+  </li>
+  <li class="ons-list__item ons-u-mt-xs@xxs@m ons-u-mr-s@xxs@m ons-u-mr-l@m">
+    {{ template "partials/bulletin/status-header/edition-version-sticker" . }}
+  </li>
+  <li class="ons-list__item ons-u-mt-xs@xxs@m">
+    {{ template "partials/bulletin/status-header/edition-version-link" . }}
+  </li>
+</ul>
