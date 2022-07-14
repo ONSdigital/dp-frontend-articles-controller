@@ -543,6 +543,7 @@ func TestUnitMapper(t *testing.T) {
 				So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 				assertSections(model.Sections, bulletin.Sections)
 				assertSections(model.Accordion, bulletin.Accordion)
+				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion)
 				assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
 				assertLinks(model.RelatedData, bulletin.RelatedData)
 				assertLinks(model.Links, bulletin.Links)
@@ -580,6 +581,18 @@ func TestUnitMapper(t *testing.T) {
 			})
 		})
 	})
+}
+
+func assertContentsView(found []ViewSection, expectedSections, expectedAccordion []zebedee.Section) {
+	totalSections := len(expectedSections)
+	totalAccordions := len(expectedAccordion)
+	So(len(found), ShouldEqual, totalSections+totalAccordions)
+	for i := range expectedSections {
+		So(found[i].Type, ShouldEqual, "section")
+	}
+	for i := range expectedAccordion {
+		So(found[totalAccordions+i].Type, ShouldEqual, "accordion")
+	}
 }
 
 func assertSections(found []Section, expected []zebedee.Section) {

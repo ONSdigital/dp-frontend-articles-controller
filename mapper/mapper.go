@@ -13,28 +13,37 @@ import (
 
 type BulletinModel struct {
 	coreModel.Page
-	Summary           string    `json:"summary"`
-	Sections          []Section `json:"sections"`
-	Accordion         []Section `json:"accordion"`
-	Charts            []Figure  `json:"charts"`
-	Tables            []Figure  `json:"tables"`
-	Images            []Figure  `json:"images"`
-	Equations         []Figure  `json:"equations"`
-	RelatedBulletins  []Link    `json:"relatedBulletins"`
-	RelatedData       []Link    `json:"relatedData"`
-	Links             []Link    `json:"links"`
-	URI               string    `json:"uri"`
-	NationalStatistic bool      `json:"nationalStatistic"`
-	LatestRelease     bool      `json:"latestRelease"`
-	Edition           string    `json:"edition"`
-	ReleaseDate       string    `json:"releaseDate"`
-	NextRelease       string    `json:"nextRelease"`
-	Contact           Contact   `json:"contact"`
-	Versions          []Message `json:"versions"`
-	Alerts            []Message `json:"alerts"`
-	ParentPath        string    `json:"parentPath"`
-	CorrectedPath     string    `json:"correctedPath"`
-	LatestReleaseUri  string    `json:"latestReleaseUri"`
+	Summary           string        `json:"summary"`
+	Sections          []Section     `json:"sections"`
+	Accordion         []Section     `json:"accordion"`
+	Charts            []Figure      `json:"charts"`
+	Tables            []Figure      `json:"tables"`
+	Images            []Figure      `json:"images"`
+	Equations         []Figure      `json:"equations"`
+	RelatedBulletins  []Link        `json:"relatedBulletins"`
+	RelatedData       []Link        `json:"relatedData"`
+	Links             []Link        `json:"links"`
+	URI               string        `json:"uri"`
+	NationalStatistic bool          `json:"nationalStatistic"`
+	LatestRelease     bool          `json:"latestRelease"`
+	Edition           string        `json:"edition"`
+	ReleaseDate       string        `json:"releaseDate"`
+	NextRelease       string        `json:"nextRelease"`
+	Contact           Contact       `json:"contact"`
+	Versions          []Message     `json:"versions"`
+	Alerts            []Message     `json:"alerts"`
+	ParentPath        string        `json:"parentPath"`
+	CorrectedPath     string        `json:"correctedPath"`
+	LatestReleaseUri  string        `json:"latestReleaseUri"`
+	ContentsView      []ViewSection `json:"contentsView"`
+}
+
+// Intermediate view to aid template rendering of Sections and Accordion
+type ViewSection struct {
+	Id     string
+	Type   string
+	Source *[]Section
+	Index  int
 }
 
 type Contact struct {
@@ -323,18 +332,33 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 	sort.Slice(model.Alerts, func(i, j int) bool { return model.Alerts[i].Date > model.Alerts[j].Date })
 
 	model.Page.Breadcrumb = mapBreadcrumbTrail(bcs, model.Language)
-
-	// TODO: model.Accordion?
-	model.TableOfContents = createTableOfContents(model.Sections)
+	populateContents(&model)
 
 	return model
 }
 
-func parentPath(p string) string {
-	return p[:strings.LastIndex(p, "/")]
+// Sections are always followed by Accordions
+func populateContents(model *BulletinModel) {
+	appendSections := func(list *[]Section, listType string, views *[]ViewSection) {
+		for index := range *list {
+			*views = append(*views, ViewSection{
+				Id:     fmt.Sprintf("%s-%d", listType, index),
+				Type:   listType,
+				Source: list,
+				Index:  index,
+			})
+		}
+	}
+
+	views := make([]ViewSection, 0, len(model.Sections)+len(model.Accordion))
+	appendSections(&model.Sections, "section", &views)
+	appendSections(&model.Accordion, "accordion", &views)
+
+	model.TableOfContents = createTableOfContents(views)
+	model.ContentsView = views
 }
 
-func createTableOfContents(documentSections []Section) coreModel.TableOfContents {
+func createTableOfContents(views []ViewSection) coreModel.TableOfContents {
 	toc := coreModel.TableOfContents{
 		AriaLabel: coreModel.Localisation{
 			LocaleKey: "TableOfContents",
@@ -347,23 +371,32 @@ func createTableOfContents(documentSections []Section) coreModel.TableOfContents
 	}
 
 	sections := make(map[string]coreModel.ContentSection)
-	displayOrder := make([]string, 0)
+	displayOrder := make([]string, 0, len(views))
 
-	for sectionIndex, section := range documentSections {
-		sectionId := fmt.Sprintf("section-%d", sectionIndex)
-		sections[sectionId] = coreModel.ContentSection{
+	for _, view := range views {
+		section := (*view.Source)[view.Index]
+		sections[view.Id] = coreModel.ContentSection{
 			Current: false,
 			Title: coreModel.Localisation{
 				Text: section.Title,
 			},
 		}
-		displayOrder = append(displayOrder, sectionId)
+		displayOrder = append(displayOrder, view.Id)
 	}
 
 	toc.Sections = sections
 	toc.DisplayOrder = displayOrder
 
 	return toc
+}
+
+func parentPath(p string) string {
+	return p[:strings.LastIndex(p, "/")]
+}
+
+type SectionReference struct {
+	Type  string
+	Index int
 }
 
 func mapBreadcrumbTrail(crumbs []zebedee.Breadcrumb, language string) []coreModel.TaxonomyNode {
