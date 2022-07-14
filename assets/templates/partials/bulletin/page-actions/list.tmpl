@@ -2,28 +2,31 @@
   <h2 class="ons-u-fs-r--b ons-u-mb-s">
     {{- localise "PageActionsTitle" .Language 4 -}}
   </h2>
+  {{ $twitter := index .ShareLinks "twitter" }}
+  {{ $linkedin := index .ShareLinks "linkedin" }}
+  {{ $email := index .ShareLinks "email" }}
   <ul class="ons-list ons-list--bare ons-list--icons">
-    <li class="ons-list__item">
+    <li class="ons-list__item {{ if $twitter.RequiresJavaScript }}nojs--hide{{ end }}">
       <span class="ons-list__prefix">
         {{ template "icons/twitter" }}
       </span>
-      <a href="">
+      <a href="{{ $twitter.Url }}">
         {{- localise "PageActionTweet" .Language 1 -}}
       </a>
     </li>
-    <li class="ons-list__item">
+    <li class="ons-list__item {{ if $linkedin.RequiresJavaScript }}nojs--hide{{ end }}">
       <span class="ons-list__prefix">
         {{ template "icons/linkedin" }}
       </span>
-      <a href="">
+      <a href="{{ $linkedin.Url }}">
         {{- localise "PageActionLinkedIn" .Language 1 -}}
       </a>
     </li>
-    <li class="ons-list__item">
+    <li class="ons-list__item {{ if $email.RequiresJavaScript }}nojs--hide{{ end }}">
       <span class="ons-list__prefix">
         {{ template "icons/email" }}
       </span>
-      <a href="">
+      <a href="{{ $email.Url }}">
         {{- localise "PageActionEmail" .Language 1 -}}
       </a>
     </li>

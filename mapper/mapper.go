@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"fmt"
+	"net/url"
 	"sort"
 	"strings"
 
@@ -10,6 +11,8 @@ import (
 	"github.com/ONSdigital/dp-renderer/helper"
 	coreModel "github.com/ONSdigital/dp-renderer/model"
 )
+
+type ShareLinks map[string]coreModel.ShareLink
 
 type BulletinModel struct {
 	coreModel.Page
@@ -36,6 +39,7 @@ type BulletinModel struct {
 	CorrectedPath     string        `json:"correctedPath"`
 	LatestReleaseUri  string        `json:"latestReleaseUri"`
 	ContentsView      []ViewSection `json:"contentsView"`
+	ShareLinks        ShareLinks    `json:"shareLinks"`
 }
 
 // Intermediate view to aid template rendering of Sections and Accordion
@@ -208,7 +212,7 @@ func CreateSixteensBulletinModel(basePage coreModel.Page, bulletin articles.Bull
 	return model
 }
 
-func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb, lang string) BulletinModel {
+func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb, lang, requestProtocol string) BulletinModel {
 	model := BulletinModel{
 		Page: basePage,
 	}
@@ -334,6 +338,9 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 	model.Page.Breadcrumb = mapBreadcrumbTrail(bcs, model.Language)
 	populateContents(&model)
 
+	currentUrl := getCurrentUrl(requestProtocol, model.SiteDomain, model.URI, lang)
+	model.ShareLinks = createShareLinks(model.Metadata.Title, currentUrl)
+
 	return model
 }
 
@@ -356,6 +363,33 @@ func populateContents(model *BulletinModel) {
 
 	model.TableOfContents = createTableOfContents(views)
 	model.ContentsView = views
+}
+
+func createShareLinks(title, url string) ShareLinks {
+	return ShareLinks{
+		coreModel.SocialEmail.String():    coreModel.SocialEmail.CreateLink(title, url),
+		coreModel.SocialLinkedin.String(): coreModel.SocialLinkedin.CreateLink(title, url),
+		coreModel.SocialTwitter.String():  coreModel.SocialTwitter.CreateLink(title, url),
+	}
+}
+
+func getCurrentUrl(requestProtocol, siteDomain, path, lang string) string {
+	var subDomain string
+	if lang == "cy" {
+		subDomain = "cy."
+	}
+
+	if siteDomain == "localhost" || siteDomain == "" {
+		siteDomain = "ons.gov.uk"
+	}
+
+	currentUrl := url.URL{
+		Scheme: requestProtocol,
+		Host:   subDomain + siteDomain,
+		Path:   path,
+	}
+
+	return currentUrl.String()
 }
 
 func createTableOfContents(views []ViewSection) coreModel.TableOfContents {
