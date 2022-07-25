@@ -1,6 +1,7 @@
 package mapper
 
 import (
+	"net/url"
 	"sort"
 	"testing"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/ONSdigital/dp-api-clients-go/v2/zebedee"
 	"github.com/ONSdigital/dp-frontend-articles-controller/mocks"
 	"github.com/ONSdigital/dp-renderer/helper"
+	"github.com/ONSdigital/dp-renderer/model"
 	coreModel "github.com/ONSdigital/dp-renderer/model"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -460,7 +462,8 @@ func TestUnitMapper(t *testing.T) {
 		Convey("When the bulletin URI is not a previous version", func() {
 			bulletin.URI = "the/bulletin/uri/path/version"
 			Convey("CreateBulletinModel maps correctly", func() {
-				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy")
+				requestProtocol := "https"
+				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol)
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
 				So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
@@ -483,6 +486,7 @@ func TestUnitMapper(t *testing.T) {
 				So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 				assertSections(model.Sections, bulletin.Sections)
 				assertSections(model.Accordion, bulletin.Accordion)
+				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion)
 				assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
 				assertLinks(model.RelatedData, bulletin.RelatedData)
 				assertLinks(model.Links, bulletin.Links)
@@ -490,6 +494,7 @@ func TestUnitMapper(t *testing.T) {
 				assertFigures(model.Tables, bulletin.Tables)
 				assertFigures(model.Images, bulletin.Images)
 				assertFigures(model.Equations, bulletin.Equations)
+				assertShareLinks(model.ShareLinks, bulletin.URI, requestProtocol)
 				So(len(model.Versions), ShouldEqual, len(bulletin.Versions))
 				// Versions should be sorted by date
 				sort.Slice(bulletin.Versions, func(i, j int) bool { return bulletin.Versions[i].ReleaseDate > bulletin.Versions[j].ReleaseDate })
@@ -522,7 +527,8 @@ func TestUnitMapper(t *testing.T) {
 		Convey("When the bulletin URI is a previous version", func() {
 			bulletin.URI = "the/bulletin/uri/path/previous/version"
 			Convey("CreateBulletinModel maps correctly", func() {
-				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy")
+				requestProtocol := "https"
+				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol)
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
 				So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
@@ -551,6 +557,7 @@ func TestUnitMapper(t *testing.T) {
 				assertFigures(model.Tables, bulletin.Tables)
 				assertFigures(model.Images, bulletin.Images)
 				assertFigures(model.Equations, bulletin.Equations)
+				assertShareLinks(model.ShareLinks, bulletin.URI, requestProtocol)
 				So(len(model.Versions), ShouldEqual, len(bulletin.Versions))
 				// Versions should be sorted by date
 				sort.Slice(bulletin.Versions, func(i, j int) bool { return bulletin.Versions[i].ReleaseDate > bulletin.Versions[j].ReleaseDate })
@@ -581,6 +588,30 @@ func TestUnitMapper(t *testing.T) {
 			})
 		})
 	})
+}
+
+func assertShareLinks(shareLinks ShareLinks, uri, requestProtocol string) {
+	So(shareLinks, ShouldContainKey, model.SocialEmail.String())
+	So(shareLinks, ShouldContainKey, model.SocialLinkedin.String())
+	So(shareLinks, ShouldContainKey, model.SocialTwitter.String())
+
+	emailUrl, err := url.Parse(shareLinks[model.SocialEmail.String()].Url)
+	So(err, ShouldBeNil)
+	emailParams := emailUrl.Query()
+	So(emailParams.Get("body"), ShouldContainSubstring, requestProtocol)
+	So(emailParams.Get("body"), ShouldContainSubstring, uri)
+
+	linkedinUrl, err := url.Parse(shareLinks[model.SocialLinkedin.String()].Url)
+	So(err, ShouldBeNil)
+	linkedinParams := linkedinUrl.Query()
+	So(linkedinParams.Get("url"), ShouldContainSubstring, requestProtocol)
+	So(linkedinParams.Get("url"), ShouldContainSubstring, uri)
+
+	twitterUrl, err := url.Parse(shareLinks[model.SocialTwitter.String()].Url)
+	So(err, ShouldBeNil)
+	twitterParams := twitterUrl.Query()
+	So(twitterParams.Get("url"), ShouldContainSubstring, requestProtocol)
+	So(twitterParams.Get("url"), ShouldContainSubstring, uri)
 }
 
 func assertContentsView(found []ViewSection, expectedSections, expectedAccordion []zebedee.Section) {

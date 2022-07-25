@@ -59,7 +59,6 @@ func Bulletin(cfg config.Config, rc RenderClient, zc ZebedeeClient, ac ArticlesA
 
 func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collectionID, lang string, rc RenderClient, zc ZebedeeClient, ac ArticlesApiClient, cfg config.Config) {
 	ctx := req.Context()
-
 	bulletin, err := ac.GetLegacyBulletin(ctx, userAccessToken, collectionID, lang, req.URL.EscapedPath())
 
 	if err != nil {
@@ -74,6 +73,10 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 	}
 
 	basePage := rc.NewBasePageModel()
-	model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs, lang)
+	requestProtocol := "http"
+	if req.TLS != nil {
+		requestProtocol = "https"
+	}
+	model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs, lang, requestProtocol)
 	rc.BuildPage(w, model, "bulletin")
 }
