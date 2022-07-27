@@ -1,7 +1,4 @@
 <div class="ons-pl-grid-col">
-  <div class="ons-u-mb-l">
-    <a href="">Read long version</a>
-  </div>
   {{ range $sectionView := .ContentsView }}
     <section id="{{ $sectionView.Id }}">
       {{ $content := index $sectionView.Source $sectionView.Index }}
