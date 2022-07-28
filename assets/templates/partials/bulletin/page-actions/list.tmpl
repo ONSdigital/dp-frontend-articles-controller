@@ -6,51 +6,51 @@
   {{ $linkedin := index .ShareLinks "linkedin" }}
   {{ $email := index .ShareLinks "email" }}
   <ul class="ons-list ons-list--bare ons-list--icons">
-    <li class="ons-list__item {{ if $twitter.RequiresJavaScript }}nojs--hide{{ end }}">
+    <li class="page-action--twitter ons-list__item {{ if $twitter.RequiresJavaScript }}nojs--hide{{ end }}">
       <span class="ons-list__prefix">
         {{ template "icons/twitter" }}
       </span>
-      <a href="{{ $twitter.Url }}">
+      <a class="ons-u-us-no" href="{{ $twitter.Url }}">
         {{- localise "PageActionTweet" .Language 1 -}}
       </a>
     </li>
-    <li class="ons-list__item {{ if $linkedin.RequiresJavaScript }}nojs--hide{{ end }}">
+    <li class="page-action--linkedin ons-list__item {{ if $linkedin.RequiresJavaScript }}nojs--hide{{ end }}">
       <span class="ons-list__prefix">
         {{ template "icons/linkedin" }}
       </span>
-      <a href="{{ $linkedin.Url }}">
+      <a class="ons-u-us-no" href="{{ $linkedin.Url }}">
         {{- localise "PageActionLinkedIn" .Language 1 -}}
       </a>
     </li>
-    <li class="ons-list__item {{ if $email.RequiresJavaScript }}nojs--hide{{ end }}">
+    <li class="page-action--email ons-list__item {{ if $email.RequiresJavaScript }}nojs--hide{{ end }}">
       <span class="ons-list__prefix">
         {{ template "icons/email" }}
       </span>
-      <a href="{{ $email.Url }}">
+      <a class="ons-u-us-no" href="{{ $email.Url }}">
         {{- localise "PageActionEmail" .Language 1 -}}
       </a>
     </li>
-    <li class="ons-list__item">
+    <li class="page-action--copy-link ons-list__item">
       <span class="ons-list__prefix">
         {{ template "icons/copy-link" }}
       </span>
-      <a href="">
+      <a class="ons-u-us-no" href="">
         {{- localise "PageActionCopyLink" .Language 1 -}}
       </a>
     </li>
-    <li class="ons-list__item">
+    <li class="page-action--download ons-list__item">
       <span class="ons-list__prefix page-action__icon--no-roundel">
         {{ template "icons/download" }}
       </span>
-      <a href="{{ .URI }}/pdf">
+      <a class="ons-u-us-no" href="{{ .URI }}/pdf">
         {{- localise "PageActionDownloadPDF" .Language 1 -}}
       </a>
     </li>
-    <li class="ons-list__item">
+    <li class="page-action--print ons-list__item nojs--hide">
       <span class="ons-list__prefix page-action__icon--no-roundel">
         {{ template "icons/print" }}
       </span>
-      <a href="">
+      <a class="ons-u-us-no" href="">
         {{- localise "PageActionPrint" .Language 1 -}}
       </a>
     </li>
