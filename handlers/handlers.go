@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -8,6 +9,7 @@ import (
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 	"github.com/ONSdigital/dp-frontend-articles-controller/mapper"
 	dphandlers "github.com/ONSdigital/dp-net/handlers"
+	"github.com/ONSdigital/dp-renderer/helper"
 	"github.com/ONSdigital/log.go/v2/log"
 	"github.com/gorilla/mux"
 )
@@ -448,8 +450,137 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 		})
 	}
 
+	/* Image sidecar
+	{
+		"type": "image",
+		"filename": "1fb0627f",
+		"title": "Dino 1",
+		"uri": "/economy/economicoutputandproductivity/output/articles/foo1119/imageedition/1fb0627f",
+		"subtitle": "Some dino",
+		"source": "google",
+		"notes": "notes for dino\nmore **notes** for dino",
+		"altText": "yep, it's a dino",
+		"files": [
+			{
+				"type": "uploaded-image",
+				"filename": "1fb0627f.jpeg",
+				"fileType": "jpeg"
+			}
+		]
+	}
+	*/
+
+	type SidecarImageFile struct {
+		Type     string `json:"type"`
+		Filename string `json:"filename"`
+		FileType string `json:"fileType"`
+	}
+
+	type SidecarImage struct {
+		Type     string             `json:"type"`
+		Filename string             `json:"filename"`
+		Title    string             `json:"title"`
+		Subtitle string             `json:"subtitle"`
+		Uri      string             `json:"uri"`
+		Source   string             `json:"source"`
+		Notes    string             `json:"notes"` /* Contains markdown */
+		AltText  string             `json:"altText"`
+		Files    []SidecarImageFile `json:"files"`
+	}
+
+	subscript := func(s string) string {
+		// TODO Babbage replaces  "~(?=\\S)(\\S*)~" with "<sub>$1</sub>"
+		return s
+	}
+
+	superscript := func(s string) string {
+		// TODO Babbage replaces "\\^(?=\\S)(\\S*)\\^" with "<sup>$1</sup>"
+		return s
+	}
+
+	resolveImages := func(markdown string) string {
+		sidecarMap := make(map[string][]byte)
+		sidecarMap["1fb0627f"] = []byte(`{"type":"image","filename":"1fb0627f","title":"Dino 1","uri":"/economy/economicoutputandproductivity/output/articles/foo1119/imageedition/1fb0627f","subtitle":"Some dino","source":"google","notes":"notes for dino\nmore **notes** for dino","altText":"yep, it's a dino","files":[{"type":"uploaded-image","filename":"1fb0627f.jpeg","fileType":"jpeg"}]}`)
+		sidecarMap["5967a85a"] = []byte(`{"type":"image","filename":"5967a85a","title":"More dinos","uri":"/economy/economicoutputandproductivity/output/articles/foo1119/imageedition/5967a85a","subtitle":"A bunch of em","source":"google","notes":"","altText":"roar","files":[{"type":"uploaded-image","filename":"5967a85a.jpeg","fileType":"jpeg"}]}`)
+
+		re := regexp.MustCompile("<ons-image\\spath=\"([-A-Za-z0-9+&@#/%?=~_|!:,.;()*$]+)\"?\\s?/>")
+		return re.ReplaceAllStringFunc(markdown, func(matchedTag string) string {
+			fmt.Printf("resolveImages/replace() string: %s\n", matchedTag)
+			submatches := re.FindStringSubmatch(matchedTag)
+			path := submatches[1]
+			fmt.Printf("resolveImages/replace() submatches: %+v\n", submatches)
+			fmt.Printf("resolveImages/replace() path: %s\n", path)
+			var sidecar SidecarImage
+			err := json.Unmarshal(sidecarMap[path], &sidecar)
+			if err != nil {
+				fmt.Println("error:", err)
+			}
+			fmt.Printf("resolveImages/replace() sidecar: %#v\n", sidecar)
+
+			var template string
+			if len(sidecar.Files) > 0 {
+				title := subscript(superscript(sidecar.Title))
+				subtitle := subscript(superscript(sidecar.Subtitle))
+				template = `<div class="ons-u-mb-l">` // TODO In print view, page-break-inside: avoid;
+				template = template + fmt.Sprintf(`<h4 class="ons-u-mt-m ons-u-pt-s ons-u-mb-xs">%s</h4>`, title)
+				if len(subtitle) != 0 {
+					template = template + fmt.Sprintf(`<h5 class="ons-u-fs-s">%s</h5>`, subtitle)
+				}
+				for _, file := range sidecar.Files {
+					template = template + fmt.Sprintf(`<img src="/resource?uri=%s.%s" alt="%s">`, sidecar.Uri, file.FileType, sidecar.AltText)
+				}
+				if len(sidecar.Source) != 0 {
+					template = template + fmt.Sprintf(`<h6 class="ons-u-fs-s--b ons-u-mt-s ons-u-mb-xs">Source: %s</h6>`, sidecar.Source)
+				}
+				if len(sidecar.Notes) != 0 {
+					template = template + fmt.Sprintf(`<h6 class="ons-u-fs-s--b ons-u-mt-s ons-u-mb-xs">Notes:</h6>%s`, helper.Markdown(sidecar.Notes))
+				}
+
+				// TODO: Download option to be hidden in print view
+				template = template + fmt.Sprintf(`
+					<h6 class="ons-u-fs-s--b ons-u-mt-s ons-u-mb-xs">
+						<span role="text">Download this image
+							<span class="ons-u-vh">%s</span>
+						</span>
+					</h6>
+				`, sidecar.Title)
+				for _, file := range sidecar.Files {
+					fileSize := "100kB" // TODO Calculate
+
+					var ariaLabel string
+					if file.Type == "uploaded-image" {
+						ariaLabel = fmt.Sprintf("Download %s as %s (%s)", sidecar.Title, file.FileType, fileSize)
+					} else if file.Type == "uploaded-data" {
+						ariaLabel = fmt.Sprintf("Download %s (%s)", sidecar.Title, fileSize)
+					}
+
+					template = template + fmt.Sprintf(`
+							<a
+								class="ons-btn"
+								title="Download as %s"
+								data-gtm-title="%s"
+								data-gtm-type="download-%s"
+								href="/file?uri=%s.%s"
+								aria-label="%s"
+							>
+								<span class="ons-btn__inner">
+									<span class="ons-btn__text">.%s (%s)</span>
+								</span>
+							</a>
+						`, file.FileType, title, file.FileType, sidecar.Uri, file.FileType, ariaLabel, file.FileType, fileSize)
+				}
+				template = template + "</div>"
+			} else {
+				template = fmt.Sprintf(`<img src="/resource?uri=%s">`, sidecar.Uri)
+			}
+			return template
+		})
+	}
+
 	for index, section := range bulletin.Sections {
 		bulletin.Sections[index].Markdown = resolveEquations(section.Markdown)
+		fmt.Printf("section %d.Markdown: %s\n", index, bulletin.Sections[index].Markdown)
+		bulletin.Sections[index].Markdown = resolveImages(section.Markdown)
 		fmt.Printf("section %d.Markdown: %s\n", index, bulletin.Sections[index].Markdown)
 	}
 
