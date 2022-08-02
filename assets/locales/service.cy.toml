@@ -157,25 +157,49 @@ other = "Gweithredoedd y dudalen"
 description = "Tweet"
 one = "Trydariad"
 
+[PageActionTweetArialLabel]
+description = "Tweet"
+one = "Share this page on Twitter (cy)"
+
 [PageActionLinkedIn]
 description = "LinkedIn"
 one = "LinkedIn"
+
+[PageActionLinkedInAriaLabel]
+description = "LinkedIn"
+one = "Share this page on LinkedIn (cy)"
 
 [PageActionEmail]
 description = "Email"
 one = "E-bost"
 
+[PageActionEmailAriaLabel]
+description = "Email"
+one = "Share this page via Email (cy)"
+
 [PageActionCopyLink]
 description = "Copy link"
 one = "Copïo'r ddolen"
+
+[PageActionCopyLinkAriaLabel]
+description = "Copy link"
+one = "Copy the link to this page to the clipboard (cy)"
 
 [PageActionDownloadPDF]
 description = "Download PDF"
 one = "Lawrlwytho fel PDF"
 
+[PageActionDownloadPDFAriaLabel]
+description = "Download PDF"
+one = "Download this page as a PDF (cy)"
+
 [PageActionPrint]
 description = "Print"
 one = "Argraffu"
+
+[PageActionPrintAriaLabel]
+description = "Print"
+one = "Print this page (cy)"
 
 [PageContentsTitle]
 description = "Page contents"

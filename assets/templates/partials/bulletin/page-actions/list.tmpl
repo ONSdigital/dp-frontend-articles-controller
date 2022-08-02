@@ -10,7 +10,11 @@
       <span class="ons-list__prefix">
         {{ template "icons/twitter" }}
       </span>
-      <a class="ons-u-us-no" href="{{ $twitter.Url }}">
+      <a
+        class="ons-u-us-no"
+        href="{{ $twitter.Url }}"
+        aria-label="{{ localise "PageActionTweetArialLabel" .Language 1 }}"
+      >
         {{- localise "PageActionTweet" .Language 1 -}}
       </a>
     </li>
@@ -18,7 +22,11 @@
       <span class="ons-list__prefix">
         {{ template "icons/linkedin" }}
       </span>
-      <a class="ons-u-us-no" href="{{ $linkedin.Url }}">
+      <a
+        class="ons-u-us-no"
+        href="{{ $linkedin.Url }}"
+        aria-label="{{ localise "PageActionLinkedInAriaLabel" .Language 1 }}"
+      >
         {{- localise "PageActionLinkedIn" .Language 1 -}}
       </a>
     </li>
@@ -26,7 +34,11 @@
       <span class="ons-list__prefix">
         {{ template "icons/email" }}
       </span>
-      <a class="ons-u-us-no" href="{{ $email.Url }}">
+      <a
+        class="ons-u-us-no"
+        href="{{ $email.Url }}"
+        aria-label="{{ localise "PageActionEmailAriaLabel" .Language 1 }}"
+      >
         {{- localise "PageActionEmail" .Language 1 -}}
       </a>
     </li>
@@ -34,7 +46,11 @@
       <span class="ons-list__prefix">
         {{ template "icons/copy-link" }}
       </span>
-      <a class="ons-u-us-no" href="">
+      <a
+        class="ons-u-us-no"
+        href=""
+        aria-label="{{ localise "PageActionCopyLinkAriaLabel" .Language 1 }}"
+      >
         {{- localise "PageActionCopyLink" .Language 1 -}}
       </a>
     </li>
@@ -42,7 +58,11 @@
       <span class="ons-list__prefix page-action__icon--no-roundel">
         {{ template "icons/download" }}
       </span>
-      <a class="ons-u-us-no" href="{{ .URI }}/pdf">
+      <a
+        class="ons-u-us-no"
+        href="{{ .URI }}/pdf"
+        aria-label="{{ localise "PageActionDownloadPDFAriaLabel" .Language 1 }}"
+      >
         {{- localise "PageActionDownloadPDF" .Language 1 -}}
       </a>
     </li>
@@ -50,7 +70,11 @@
       <span class="ons-list__prefix page-action__icon--no-roundel">
         {{ template "icons/print" }}
       </span>
-      <a class="ons-u-us-no" href="">
+      <a
+        class="ons-u-us-no"
+        href=""
+        aria-label="{{ localise "PageActionPrintAriaLabel" .Language 1 }}"
+      >
         {{- localise "PageActionPrint" .Language 1 -}}
       </a>
     </li>

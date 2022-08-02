@@ -157,25 +157,49 @@ other = "Page actions"
 description = "Tweet"
 one = "Tweet"
 
+[PageActionTweetArialLabel]
+description = "Tweet"
+one = "Share this page on Twitter"
+
 [PageActionLinkedIn]
 description = "LinkedIn"
 one = "LinkedIn"
+
+[PageActionLinkedInAriaLabel]
+description = "LinkedIn"
+one = "Share this page on LinkedIn"
 
 [PageActionEmail]
 description = "Email"
 one = "Email"
 
+[PageActionEmailAriaLabel]
+description = "Email"
+one = "Share this page via Email"
+
 [PageActionCopyLink]
 description = "Copy link"
 one = "Copy link"
+
+[PageActionCopyLinkAriaLabel]
+description = "Copy link"
+one = "Copy the link to this page to the clipboard"
 
 [PageActionDownloadPDF]
 description = "Download PDF"
 one = "Download PDF"
 
+[PageActionDownloadPDFAriaLabel]
+description = "Download PDF"
+one = "Download this page as a PDF"
+
 [PageActionPrint]
 description = "Print"
 one = "Print"
+
+[PageActionPrintAriaLabel]
+description = "Print"
+one = "Print this page"
 
 [PageContentsTitle]
 description = "Page contents"
