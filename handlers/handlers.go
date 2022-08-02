@@ -97,7 +97,61 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 		babbage/src/main/web/templates/handlebars/partials/equation.handlebars
 		babbage/src/main/java/com/github/onsdigital/babbage/template/handlebars/helpers/markdown/CustomMarkdownHelper.java
 		babbage/src/main/java/com/github/onsdigital/babbage/template/handlebars/helpers/markdown/util/MathjaxTagReplacer.java
+
+		Sidecar
+
+		{
+			"filename": "0369a98c",
+			"content": "\\sqrt{x^2+1}",
+			"files": [
+				{
+					"type": "generated-svg",
+					"filename": "0369a98c.svg",
+					"fileType": "svg"
+				},
+				{
+					"type": "generated-mml",
+					"filename": "0369a98c.mml",
+					"fileType": "mml"
+				},
+				{
+					"type": "generated-png",
+					"filename": "0369a98c.png",
+					"fileType": "png"
+				}
+			],
+			"title": "something large",
+			"type": "equation",
+			"uri": "/economy/economicoutputandproductivity/output/articles/formulatest/formulatest/0369a98c"
+		}
 	*/
+
+	type SidecarFile struct {
+		Type     string `json:"type"`
+		Filename string `json:"filename"`
+		FileType string `json:"fileType"`
+	}
+
+	type SidecarEquation struct {
+		Type     string        `json:"type"`
+		Filename string        `json:"filename"`
+		Title    string        `json:"title"`
+		Content  string        `json:"content"`
+		Uri      string        `json:"uri"`
+		Files    []SidecarFile `json:"files"`
+	}
+
+	type SidecarImage struct {
+		Type     string        `json:"type"`
+		Filename string        `json:"filename"`
+		Title    string        `json:"title"`
+		Subtitle string        `json:"subtitle"`
+		Uri      string        `json:"uri"`
+		Source   string        `json:"source"`
+		Notes    string        `json:"notes"` /* Contains markdown */
+		AltText  string        `json:"altText"`
+		Files    []SidecarFile `json:"files"`
+	}
 
 	resolveEquations := func(markdown string) string {
 		sidecarMap := make(map[string]string)
@@ -469,24 +523,6 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 		]
 	}
 	*/
-
-	type SidecarImageFile struct {
-		Type     string `json:"type"`
-		Filename string `json:"filename"`
-		FileType string `json:"fileType"`
-	}
-
-	type SidecarImage struct {
-		Type     string             `json:"type"`
-		Filename string             `json:"filename"`
-		Title    string             `json:"title"`
-		Subtitle string             `json:"subtitle"`
-		Uri      string             `json:"uri"`
-		Source   string             `json:"source"`
-		Notes    string             `json:"notes"` /* Contains markdown */
-		AltText  string             `json:"altText"`
-		Files    []SidecarImageFile `json:"files"`
-	}
 
 	subscript := func(s string) string {
 		// TODO Babbage replaces  "~(?=\\S)(\\S*)~" with "<sub>$1</sub>"
