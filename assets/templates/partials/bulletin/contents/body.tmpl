@@ -4,7 +4,7 @@
       {{ $content := index $sectionView.Source $sectionView.Index }}
       <h2>{{ $content.Title }}</h2>
       {{ markdown $content.Markdown }}
-      <div class="ons-u-mb-l ons-u-mt-l ons-u-vh@m@xxl">
+      <div class="ons-u-mb-l ons-u-mt-l ons-u-vh@m">
         {{ template "partials/back-to" $sectionView }}
       </div>
     </section>
