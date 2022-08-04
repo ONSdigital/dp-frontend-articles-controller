@@ -44,10 +44,12 @@ type BulletinModel struct {
 
 // Intermediate view to aid template rendering of Sections and Accordion
 type ViewSection struct {
-	Id     string
-	Type   string
-	Source *[]Section
-	Index  int
+	Id       string
+	Type     string
+	Source   *[]Section
+	Index    int
+	BackTo   coreModel.BackTo
+	Language string
 }
 
 type Contact struct {
@@ -361,6 +363,17 @@ func populateContents(model *BulletinModel) {
 	appendSections(&model.Sections, "section", &views)
 	appendSections(&model.Accordion, "accordion", &views)
 
+	for index := range views {
+		views[index].BackTo = coreModel.BackTo{
+			Text: coreModel.Localisation{
+				LocaleKey: "BackToContents",
+				Plural:    4,
+			},
+			AnchorFragment: "toc",
+		}
+		views[index].Language = model.Language
+	}
+
 	model.TableOfContents = createTableOfContents(views)
 	model.ContentsView = views
 }
@@ -394,6 +407,7 @@ func getCurrentUrl(requestProtocol, siteDomain, path, lang string) string {
 
 func createTableOfContents(views []ViewSection) coreModel.TableOfContents {
 	toc := coreModel.TableOfContents{
+		Id: "toc",
 		AriaLabel: coreModel.Localisation{
 			LocaleKey: "TableOfContents",
 			Plural:    1,
