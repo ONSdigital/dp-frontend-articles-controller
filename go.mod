@@ -6,7 +6,7 @@ require (
 	github.com/ONSdigital/dp-api-clients-go/v2 v2.135.0
 	github.com/ONSdigital/dp-healthcheck v1.2.3
 	github.com/ONSdigital/dp-net v1.4.1
-	github.com/ONSdigital/dp-renderer v1.40.0
+	github.com/ONSdigital/dp-renderer v1.44.0
 	github.com/ONSdigital/log.go/v2 v2.2.0
 	github.com/golang/mock v1.6.0
 	github.com/gorilla/mux v1.8.0
