@@ -79,7 +79,7 @@ one = "This is not the latest release"
 
 [ViewCorrectedVersion]
 description = "View corrected version"
-one = "View corrected version"
+one = "Gweld y fersiwn wedi'i chywiro"
 
 [ViewSupersededVersion]
 description = "View superseded version"
@@ -143,11 +143,11 @@ one = "Diweddaraf"
 
 [StatusLineReleaseSuperseded]
 description = "Superseded"
-one = "Superseded (cy)"
+one = "Disodlwyd"
 
 [StatusLineReleaseOutdated]
 description = "Outdated"
-one = "Outdated (cy)"
+one = "Heb ei ddiweddaru"
 
 [PageActionsTitle]
 description = "Gweithredoedd y dudalen"
@@ -159,7 +159,7 @@ one = "Trydariad"
 
 [PageActionTweetArialLabel]
 description = "Tweet"
-one = "Share this page on Twitter (cy)"
+one = "Rhannu'r dudalen hon ar Twitter"
 
 [PageActionLinkedIn]
 description = "LinkedIn"
@@ -167,7 +167,7 @@ one = "LinkedIn"
 
 [PageActionLinkedInAriaLabel]
 description = "LinkedIn"
-one = "Share this page on LinkedIn (cy)"
+one = "Rhannu'r dudalen hon ar LinkedIn"
 
 [PageActionEmail]
 description = "Email"
@@ -175,7 +175,7 @@ one = "E-bost"
 
 [PageActionEmailAriaLabel]
 description = "Email"
-one = "Share this page via Email (cy)"
+one = "Rhannu'r dudalen hon drwy E-bost"
 
 [PageActionCopyLink]
 description = "Copy link"
@@ -183,7 +183,7 @@ one = "Copïo'r ddolen"
 
 [PageActionCopyLinkAriaLabel]
 description = "Copy link"
-one = "Copy the link to this page to the clipboard (cy)"
+one = "Copïo'r ddolen i'r dudalen hon i'r clipfwrdd"
 
 [PageActionDownloadPDF]
 description = "Download PDF"
@@ -191,7 +191,7 @@ one = "Lawrlwytho fel PDF"
 
 [PageActionDownloadPDFAriaLabel]
 description = "Download PDF"
-one = "Download this page as a PDF (cy)"
+one = "Lawrlwytho'r dudalen hon fel PDF"
 
 [PageActionPrint]
 description = "Print"
@@ -199,7 +199,7 @@ one = "Argraffu"
 
 [PageActionPrintAriaLabel]
 description = "Print"
-one = "Print this page (cy)"
+one = "Argraffu'r dudalen hon"
 
 [PageContentsTitle]
 description = "Page contents"
