@@ -204,3 +204,32 @@ one = "Print this page"
 [PageContentsTitle]
 description = "Page contents"
 one = "Page contents"
+
+[DocumentTypeAdHoc]
+description = "Ad Hoc"
+one = "Ad Hoc"
+
+[StatusLineReferenceNumber]
+description = "Reference number"
+one = "Reference number"
+
+[SectionTitleSummaryOfRequest]
+description = "Summary of request"
+one = "Summary of request"
+
+[SectionTitleDownloadAssociatedWithRequest]
+description = "Download associated with request"
+one = "Download associated with request"
+other = "Downloads associated with request"
+
+[SectionTitleFurtherReading]
+description = "You might also be interested in"
+one = "You might also be interested in"
+
+[FurtherReadingAllRequestedData]
+description = "All user requested data"
+one = "All user requested data"
+
+[FurtherReadingMakingARequest]
+description = "Making a request"
+one = "Making a request"

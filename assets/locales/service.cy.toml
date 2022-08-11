@@ -204,3 +204,32 @@ one = "Argraffu'r dudalen hon"
 [PageContentsTitle]
 description = "Page contents"
 one = "Cynnwys y dudalen"
+
+[DocumentTypeAdHoc]
+description = "Ad Hoc"
+one = "Ad Hoc"
+
+[StatusLineReferenceNumber]
+description = "Reference number"
+one = "Reference number (cy)"
+
+[SectionTitleSummaryOfRequest]
+description = "Summary of request"
+one = "Crynodeb o'r cais"
+
+[SectionTitleDownloadAssociatedWithRequest]
+description = "Download associated with request"
+one = "Lawrlwyth cysylltiol ar cais"
+other = "Downloads associated with request (cy)"
+
+[SectionTitleFurtherReading]
+description = "You might also be interested in"
+one = "Efallai y bydd hefyd gennych ddiddordeb yn"
+
+[FurtherReadingAllRequestedData]
+description = "All user requested data"
+one = "All user requested data (cy)"
+
+[FurtherReadingMakingARequest]
+description = "Making a request"
+one = "Making a request (cy)"

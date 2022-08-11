@@ -1,0 +1,14 @@
+<div class="ons-page__container ons-container bulletin">
+  {{ template "partials/breadcrumb" . }}
+
+  <div class="ons-u-fs-m ons-u-mt-s ons-u-pb-xxs bulletin__document-type">
+    {{- localise "DocumentTypeAdHoc" .Language 1 -}}
+  </div>
+
+  <h1 class="ons-u-fs-xxxl ons-u-mb-m">
+    {{- .Page.Metadata.Title -}}
+  </h1>
+
+  {{ template "partials/adhoc/status-header" . }}
+  {{ template "partials/adhoc/contents" . }}
+</div>

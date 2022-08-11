@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 	"github.com/ONSdigital/dp-frontend-articles-controller/mapper"
+	"github.com/ONSdigital/dp-frontend-articles-controller/model"
 	dphandlers "github.com/ONSdigital/dp-net/handlers"
 	"github.com/ONSdigital/log.go/v2/log"
 	"github.com/gorilla/mux"
@@ -77,6 +80,44 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 	if req.TLS != nil {
 		requestProtocol = "https"
 	}
-	model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs, lang, requestProtocol)
-	rc.BuildPage(w, model, "bulletin")
+	//model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs, lang, requestProtocol)
+	//rc.BuildPage(w, model, "bulletin")
+
+	adhocJsonSource := []byte(`{
+		"downloads": [
+			{
+				"title": "ANWAR",
+				"file": "deccanwar2november2015_tcm77-430106.xls"
+			},
+			{
+				"title": "Tables",
+				"file": "decctablesnovember2015_tcm77-430108.pdf"
+			}
+		],
+		"markdown": [
+			"Export and import estimates of crude oil and other fuels including adjustments. "
+		],
+		"links": [],
+		"type": "static_adhoc",
+		"uri": "/economy/environmentalaccounts/adhocs/005204fuelandenergydataprovidedonamonthlybasistodecc",
+		"description": {
+			"title": "Fuel and energy data provided on a monthly basis to DECC",
+			"keywords": [],
+			"metaDescription": "Export and import estimates of crude oil and other fuels including adjustments. ",
+			"releaseDate": "2016-01-15T08:03:43.411Z",
+			"unit": "",
+			"preUnit": "",
+			"source": "",
+			"reference": "005204"
+		}
+	}`)
+
+	var adhocJson model.AdHocJSON
+	jsonError := json.Unmarshal(adhocJsonSource, &adhocJson)
+	if jsonError != nil {
+		fmt.Println("error:", jsonError)
+	}
+
+	model := mapper.CreateAdHocModel(basePage, adhocJson, breadcrumbs, lang, requestProtocol)
+	rc.BuildPage(w, model, "adhoc")
 }
