@@ -6,6 +6,7 @@ package handlers
 
 import (
 	context "context"
+	template "html/template"
 	io "io"
 	reflect "reflect"
 
@@ -101,6 +102,18 @@ func (mr *MockRenderClientMockRecorder) BuildPage(w, pageModel, templateName int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuildPage", reflect.TypeOf((*MockRenderClient)(nil).BuildPage), w, pageModel, templateName)
 }
 
+// BuildPageWithOptions mocks base method.
+func (m *MockRenderClient) BuildPageWithOptions(w io.Writer, pageModel interface{}, templateName string, overrideFuncMap template.FuncMap) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "BuildPageWithOptions", w, pageModel, templateName, overrideFuncMap)
+}
+
+// BuildPageWithOptions indicates an expected call of BuildPageWithOptions.
+func (mr *MockRenderClientMockRecorder) BuildPageWithOptions(w, pageModel, templateName, overrideFuncMap interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuildPageWithOptions", reflect.TypeOf((*MockRenderClient)(nil).BuildPageWithOptions), w, pageModel, templateName, overrideFuncMap)
+}
+
 // NewBasePageModel mocks base method.
 func (m *MockRenderClient) NewBasePageModel() model.Page {
 	m.ctrl.T.Helper()
@@ -151,6 +164,21 @@ func (m *MockZebedeeClient) GetBreadcrumb(ctx context.Context, userAccessToken, 
 func (mr *MockZebedeeClientMockRecorder) GetBreadcrumb(ctx, userAccessToken, collectionID, lang, uri interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBreadcrumb", reflect.TypeOf((*MockZebedeeClient)(nil).GetBreadcrumb), ctx, userAccessToken, collectionID, lang, uri)
+}
+
+// GetFigure mocks base method.
+func (m *MockZebedeeClient) GetFigure(ctx context.Context, userAccessToken, collectionID, lang, uri string) (zebedee.Figure, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFigure", ctx, userAccessToken, collectionID, lang, uri)
+	ret0, _ := ret[0].(zebedee.Figure)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFigure indicates an expected call of GetFigure.
+func (mr *MockZebedeeClientMockRecorder) GetFigure(ctx, userAccessToken, collectionID, lang, uri interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFigure", reflect.TypeOf((*MockZebedeeClient)(nil).GetFigure), ctx, userAccessToken, collectionID, lang, uri)
 }
 
 // MockArticlesApiClient is a mock of ArticlesApiClient interface.

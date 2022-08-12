@@ -2,6 +2,7 @@ package handlers
 
 import (
 	context "context"
+	"html/template"
 	"io"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/articles"
@@ -21,12 +22,14 @@ type ClientError interface {
 // RenderClient is an interface with methods for rendering a template
 type RenderClient interface {
 	BuildPage(w io.Writer, pageModel interface{}, templateName string)
+	BuildPageWithOptions(w io.Writer, pageModel interface{}, templateName string, overrideFuncMap template.FuncMap)
 	NewBasePageModel() model.Page
 }
 
 // ZebedeeClient is an interface for zebedee client
 type ZebedeeClient interface {
 	GetBreadcrumb(ctx context.Context, userAccessToken, collectionID, lang, uri string) ([]zebedee.Breadcrumb, error)
+	GetFigure(ctx context.Context, userAccessToken, collectionID, lang, uri string) (zebedee.Figure, error)
 }
 
 // ArticlesApiClient is an interface for the Articles API client

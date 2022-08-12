@@ -3,10 +3,10 @@ module github.com/ONSdigital/dp-frontend-articles-controller
 go 1.17
 
 require (
-	github.com/ONSdigital/dp-api-clients-go/v2 v2.135.0
+	github.com/ONSdigital/dp-api-clients-go/v2 v2.136.0-unpublished
 	github.com/ONSdigital/dp-healthcheck v1.2.3
 	github.com/ONSdigital/dp-net v1.4.1
-	github.com/ONSdigital/dp-renderer v1.32.1
+	github.com/ONSdigital/dp-renderer v1.45.1-unpublished
 	github.com/ONSdigital/log.go/v2 v2.2.0
 	github.com/golang/mock v1.6.0
 	github.com/gorilla/mux v1.8.0
@@ -41,3 +41,7 @@ require (
 	golang.org/x/sys v0.0.0-20220204135822-1c1b9b1eba6a // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
+
+replace github.com/ONSdigital/dp-renderer => ../dp-renderer
+
+replace github.com/ONSdigital/dp-api-clients-go/v2 => ../dp-api-clients-go
