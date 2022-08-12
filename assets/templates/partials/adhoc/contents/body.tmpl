@@ -12,14 +12,14 @@
   {{ end }}
   */}}
 
-  <section>
+  <section id="section-summary">
     <h2>{{ localise "SectionTitleSummaryOfRequest" .Language 1 }}</h2>
     {{ range .BodyMarkdown }}
       {{ markdown .}}
     {{ end }}
   </section>
 
-  <section>
+  <section id="section-downloads">
     {{ $plural := 1 }}
     {{ if gt (len .Downloads) 1 }}
       {{ $plural = 4 }}
@@ -43,7 +43,7 @@
     </ul>
   </section>
 
-  <section>
+  <section id="section-further-reading">
     <h2>{{ localise "SectionTitleFurtherReading" .Language 1 }}</h2>
     <ul class="list--neutral">
       <li>

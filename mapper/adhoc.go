@@ -22,6 +22,7 @@ func CreateAdHocModel(basePage coreModel.Page, adhocJson model.AdHocJSON, bcs []
 	adhoc.ReleaseDate = adhocJson.Description.ReleaseDate
 	adhoc.BodyMarkdown = adhocJson.Markdown
 	adhoc.Reference = adhocJson.Description.Reference
+	adhoc.TableOfContents = createAdHocTableOfContents()
 	adhoc.Downloads = createDownloads(adhocJson.Downloads)
 	return adhoc
 }
@@ -32,4 +33,52 @@ func createDownloads(downloadsJSON []model.DownloadJSON) []model.Download {
 		downloads[index] = model.Download(download)
 	}
 	return downloads
+}
+
+func createAdHocTableOfContents() coreModel.TableOfContents {
+	toc := coreModel.TableOfContents{
+		Id: "toc",
+		AriaLabel: coreModel.Localisation{
+			LocaleKey: "TableOfContents",
+			Plural:    1,
+		},
+		Title: coreModel.Localisation{
+			LocaleKey: "PageContentsTitle",
+			Plural:    1,
+		},
+	}
+
+	sections := make(map[string]coreModel.ContentSection)
+	sections["section-summary"] = coreModel.ContentSection{
+		Current: false,
+		Title: coreModel.Localisation{
+			LocaleKey: "SectionTitleSummaryOfRequest",
+			Plural:    1,
+		},
+	}
+	sections["section-downloads"] = coreModel.ContentSection{
+		Current: false,
+		Title: coreModel.Localisation{
+			LocaleKey: "SectionTitleDownloadAssociatedWithRequest",
+			Plural:    1,
+		},
+	}
+	sections["section-further-reading"] = coreModel.ContentSection{
+		Current: false,
+		Title: coreModel.Localisation{
+			LocaleKey: "SectionTitleFurtherReading",
+			Plural:    1,
+		},
+	}
+
+	displayOrder := []string{
+		"section-summary",
+		"section-downloads",
+		"section-further-reading",
+	}
+
+	toc.Sections = sections
+	toc.DisplayOrder = displayOrder
+
+	return toc
 }
