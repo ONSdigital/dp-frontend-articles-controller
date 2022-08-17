@@ -3,9 +3,11 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/ONSdigital/dp-frontend-articles-controller/assets"
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 	"github.com/ONSdigital/dp-frontend-articles-controller/mapper"
 	dphandlers "github.com/ONSdigital/dp-net/handlers"
+	"github.com/ONSdigital/dp-renderer/tagresolver"
 	"github.com/ONSdigital/log.go/v2/log"
 	"github.com/gorilla/mux"
 )
@@ -45,9 +47,15 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 		return
 	}
 
+	getContent := func(path string) (interface{}, error) {
+		return zc.GetFigure(ctx, userAccessToken, collectionID, lang, path)
+	}
+
+	helper := tagresolver.NewTagResolverHelper(assets.Asset, assets.AssetNames, cfg.PatternLibraryAssetsPath, cfg.SiteDomain, getContent)
+
 	basePage := rc.NewBasePageModel()
 	model := mapper.CreateSixteensBulletinModel(basePage, *bulletin, breadcrumbs, lang)
-	rc.BuildPage(w, model, "sixteens-bulletin")
+	rc.BuildPageWithOptions(w, model, "sixteens-bulletin", helper.GetFuncMap())
 }
 
 // Bulletin handles bulletin requests
