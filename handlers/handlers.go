@@ -616,7 +616,7 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 	for index, section := range bulletin.Sections {
 		bulletin.Sections[index].Markdown = resolveEquations(section.Markdown)
 		fmt.Printf("section %d.Markdown: %s\n", index, bulletin.Sections[index].Markdown)
-		bulletin.Sections[index].Markdown = resolveImages(section.Markdown)
+		bulletin.Sections[index].Markdown = resolveImages(bulletin.Sections[index].Markdown)
 		fmt.Printf("section %d.Markdown: %s\n", index, bulletin.Sections[index].Markdown)
 	}
 
