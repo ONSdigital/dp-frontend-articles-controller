@@ -30,6 +30,8 @@ type RenderClient interface {
 type ZebedeeClient interface {
 	GetBreadcrumb(ctx context.Context, userAccessToken, collectionID, lang, uri string) ([]zebedee.Breadcrumb, error)
 	GetFigure(ctx context.Context, userAccessToken, collectionID, lang, uri string) (zebedee.Figure, error)
+	GetResourceBody(ctx context.Context, userAccessToken, collectionID, lang, uri string) ([]byte, error)
+	GetFileSize(ctx context.Context, userAccessToken, collectionID, lang, uri string) (zebedee.FileSize, error)
 }
 
 // ArticlesApiClient is an interface for the Articles API client

@@ -1,12 +1,16 @@
 package handlers
 
 import (
+	"bytes"
+	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/ONSdigital/dp-frontend-articles-controller/assets"
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 	"github.com/ONSdigital/dp-frontend-articles-controller/mapper"
 	dphandlers "github.com/ONSdigital/dp-net/handlers"
+	coreModel "github.com/ONSdigital/dp-renderer/model"
 	"github.com/ONSdigital/dp-renderer/tagresolver"
 	"github.com/ONSdigital/log.go/v2/log"
 	"github.com/gorilla/mux"
@@ -47,11 +51,52 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 		return
 	}
 
-	getContent := func(path string) (interface{}, error) {
-		return zc.GetFigure(ctx, userAccessToken, collectionID, lang, path)
+	resourceReader := tagresolver.ResourceReader{
+		GetFigure: func(path string) (coreModel.Figure, error) {
+			if !strings.HasPrefix(path, uri) {
+				path = uri + "/" + path
+			}
+			figure, err := zc.GetFigure(ctx, userAccessToken, collectionID, lang, path)
+			if err != nil {
+				return coreModel.Figure{}, err
+			}
+			return mapper.MapFigure(figure), nil
+		},
+		GetResourceBody: func(path string) ([]byte, error) {
+			if !strings.HasPrefix(path, uri) {
+				path = uri + "/" + path
+			}
+			return zc.GetResourceBody(ctx, userAccessToken, collectionID, lang, path)
+		},
+		GetTable: func(html []byte) (string, error) {
+			//Call table renderer with html TODO create table renderer client
+			tableRendererUrl := "http://localhost:23300"
+			req, err := http.NewRequest("POST", tableRendererUrl+"/render/html", bytes.NewBuffer(html))
+			req.Header.Set("Content-Type", "application/json")
+
+			client := &http.Client{}
+			resp, err := client.Do(req)
+			if err != nil {
+				panic(err)
+			}
+			defer resp.Body.Close()
+
+			body, _ := ioutil.ReadAll(resp.Body)
+			return string(body), nil
+		},
+		GetFileSize: func(path string) (int, error) {
+			if !strings.HasPrefix(path, uri) {
+				path = uri + "/" + path
+			}
+			size, err := zc.GetFileSize(ctx, userAccessToken, collectionID, lang, path)
+			if err != nil {
+				return 0, err
+			}
+			return size.Size, nil
+		},
 	}
 
-	helper := tagresolver.NewTagResolverHelper(assets.Asset, assets.AssetNames, cfg.PatternLibraryAssetsPath, cfg.SiteDomain, getContent)
+	helper := tagresolver.NewTagResolverHelper(assets.Asset, assets.AssetNames, cfg.PatternLibraryAssetsPath, cfg.SiteDomain, resourceReader)
 
 	basePage := rc.NewBasePageModel()
 	model := mapper.CreateSixteensBulletinModel(basePage, *bulletin, breadcrumbs, lang)

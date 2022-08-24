@@ -346,6 +346,29 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 	return model
 }
 
+func MapFigure(figure zebedee.Figure) coreModel.Figure {
+
+	f := coreModel.Figure{
+		URI:      figure.URI,
+		Title:    figure.Title,
+		Subtitle: figure.Subtitle,
+		Filename: figure.Filename,
+		AltText:  figure.AltText,
+		// TODO
+	}
+	f.Files = []coreModel.SidecarFile{}
+	for _, file := range figure.Files {
+		f.Files = append(f.Files, coreModel.SidecarFile{
+			Type:     file.Type,
+			FileType: file.FileType,
+			Filename: file.Filename,
+			// Content:  file.Content,
+		})
+	}
+
+	return f
+}
+
 // Sections are always followed by Accordions
 func populateContents(model *BulletinModel) {
 	appendSections := func(list *[]Section, listType string, views *[]ViewSection) {
