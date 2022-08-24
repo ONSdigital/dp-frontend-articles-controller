@@ -2,6 +2,8 @@ module github.com/ONSdigital/dp-frontend-articles-controller
 
 go 1.17
 
+replace "github.com/ONSdigital/dp-renderer" => "/Users/giles/onsdigital/dp-renderer"
+
 require (
 	github.com/ONSdigital/dp-api-clients-go/v2 v2.162.1-0.20220824082950-c4dbb69eff2e
 	github.com/ONSdigital/dp-healthcheck v1.3.0
