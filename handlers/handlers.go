@@ -51,7 +51,6 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 	}
 
 	resourceReader := tagresolver.ResourceReader{
-		URI: uri,
 		GetFigure: func(path string) (coreModel.Figure, error) {
 			figure, err := zc.GetFigure(ctx, userAccessToken, collectionID, lang, path)
 			if err != nil {
@@ -88,7 +87,14 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 		},
 	}
 
-	helper := tagresolver.NewTagResolverHelper(assets.Asset, assets.AssetNames, cfg.PatternLibraryAssetsPath, cfg.SiteDomain, resourceReader)
+	resolverCfg := tagresolver.TagResolverRenderConfig{
+		Asset:                    assets.Asset,
+		AssetNames:               assets.AssetNames,
+		PatternLibraryAssetsPath: cfg.PatternLibraryAssetsPath,
+		SiteDomain:               cfg.SiteDomain,
+	}
+
+	helper := tagresolver.NewTagResolverHelper(uri, resourceReader, resolverCfg)
 
 	basePage := rc.NewBasePageModel()
 	model := mapper.CreateSixteensBulletinModel(basePage, *bulletin, breadcrumbs, lang)
