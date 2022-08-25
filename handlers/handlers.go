@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"io/ioutil"
 	"net/http"
-	"strings"
 
 	"github.com/ONSdigital/dp-frontend-articles-controller/assets"
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
@@ -52,10 +51,8 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 	}
 
 	resourceReader := tagresolver.ResourceReader{
+		URI: uri,
 		GetFigure: func(path string) (coreModel.Figure, error) {
-			if !strings.HasPrefix(path, uri) {
-				path = uri + "/" + path
-			}
 			figure, err := zc.GetFigure(ctx, userAccessToken, collectionID, lang, path)
 			if err != nil {
 				return coreModel.Figure{}, err
@@ -63,13 +60,11 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 			return mapper.MapFigure(figure), nil
 		},
 		GetResourceBody: func(path string) ([]byte, error) {
-			if !strings.HasPrefix(path, uri) {
-				path = uri + "/" + path
-			}
 			return zc.GetResourceBody(ctx, userAccessToken, collectionID, lang, path)
 		},
 		GetTable: func(html []byte) (string, error) {
-			//Call table renderer with html TODO create table renderer client
+			//TODO create table renderer client
+			//Call table renderer with html
 			tableRendererUrl := "http://localhost:23300"
 			req, err := http.NewRequest("POST", tableRendererUrl+"/render/html", bytes.NewBuffer(html))
 			req.Header.Set("Content-Type", "application/json")
@@ -85,9 +80,6 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 			return string(body), nil
 		},
 		GetFileSize: func(path string) (int, error) {
-			if !strings.HasPrefix(path, uri) {
-				path = uri + "/" + path
-			}
 			size, err := zc.GetFileSize(ctx, userAccessToken, collectionID, lang, path)
 			if err != nil {
 				return 0, err
