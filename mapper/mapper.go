@@ -349,11 +349,16 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 func MapFigure(figure zebedee.Figure) coreModel.Figure {
 
 	f := coreModel.Figure{
-		URI:      figure.URI,
-		Title:    figure.Title,
-		Subtitle: figure.Subtitle,
-		Filename: figure.Filename,
-		AltText:  figure.AltText,
+		URI:       figure.URI,
+		Title:     figure.Title,
+		Subtitle:  figure.Subtitle,
+		Filename:  figure.Filename,
+		AltText:   figure.AltText,
+		Version:   figure.Version,
+		Type:      figure.Type,
+		ChartType: figure.ChartType,
+		Source:    figure.Source,
+		Notes:     figure.Notes,
 		// TODO
 	}
 	f.Files = []coreModel.SidecarFile{}
