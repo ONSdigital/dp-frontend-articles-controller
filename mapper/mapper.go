@@ -359,6 +359,7 @@ func MapFigure(figure zebedee.Figure) coreModel.Figure {
 		ChartType: figure.ChartType,
 		Source:    figure.Source,
 		Notes:     figure.Notes,
+		Series:    figure.Series,
 		// TODO
 	}
 	f.Files = []coreModel.SidecarFile{}

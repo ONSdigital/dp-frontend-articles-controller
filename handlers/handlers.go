@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -52,10 +53,12 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 
 	resourceReader := tagresolver.ResourceReader{
 		GetFigure: func(path string) (coreModel.Figure, error) {
+			fmt.Printf("GetFigure path %s\n", path)
 			figure, err := zc.GetFigure(ctx, userAccessToken, collectionID, lang, path)
 			if err != nil {
 				return coreModel.Figure{}, err
 			}
+			fmt.Printf("GetFigure unmapped %#v\n\n", figure)
 			return mapper.MapFigure(figure), nil
 		},
 		GetResourceBody: func(path string) ([]byte, error) {
