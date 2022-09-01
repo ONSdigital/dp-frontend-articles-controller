@@ -54,12 +54,16 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 
 	resourceReader := sixteenstagresolver.ResourceReader{
 		GetFigure: func(path string) (coreModel.Figure, error) {
-			fmt.Printf("GetFigure path %s\n", path)
+			fmt.Printf("sixteenstagresolver GetFigure ctx %#v\n", ctx)
+			fmt.Printf("sixteenstagresolver GetFigure userAccessToken %s\n", userAccessToken)
+			fmt.Printf("sixteenstagresolver GetFigure collectionID %s\n", collectionID)
+			fmt.Printf("sixteenstagresolver GetFigure lang %s\n", lang)
+			fmt.Printf("sixteenstagresolver GetFigure path %s\n", path)
 			figure, err := zc.GetFigure(ctx, userAccessToken, collectionID, lang, path)
 			if err != nil {
 				return coreModel.Figure{}, err
 			}
-			fmt.Printf("GetFigure unmapped %#v\n\n", figure)
+			fmt.Printf("sixteenstagresolver GetFigure unmapped %#v\n\n", figure)
 			return mapper.MapFigure(figure), nil
 		},
 		GetResourceBody: func(path string) ([]byte, error) {
@@ -98,6 +102,7 @@ func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken,
 		SiteDomain:               cfg.SiteDomain,
 	}
 
+	fmt.Printf("sixteenstagresolver.NewTagResolverHelper uri %s\n", uri)
 	helper := sixteenstagresolver.NewTagResolverHelper(uri, resourceReader, resolverCfg)
 
 	basePage := rc.NewBasePageModel()
@@ -131,12 +136,17 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 
 	resourceReader := tagresolver.ResourceReader{
 		GetFigure: func(path string) (coreModel.Figure, error) {
-			fmt.Printf("GetFigure path %s\n", path)
+			fmt.Printf("tagresolver GetFigure ctx %#v\n", ctx)
+			fmt.Printf("tagresolver GetFigure userAccessToken %s\n", userAccessToken)
+			fmt.Printf("tagresolver GetFigure collectionID %s\n", collectionID)
+			fmt.Printf("tagresolver GetFigure lang %s\n", lang)
+			fmt.Printf("tagresolver GetFigure path %s\n", path)
 			figure, err := zc.GetFigure(ctx, userAccessToken, collectionID, lang, path)
 			if err != nil {
+				fmt.Printf("tagresolver GetFigure error %#v", err)
 				return coreModel.Figure{}, err
 			}
-			fmt.Printf("GetFigure unmapped %#v\n\n", figure)
+			fmt.Printf("tagresolver GetFigure unmapped %#v\n\n", figure)
 			return mapper.MapFigure(figure), nil
 		},
 		GetResourceBody: func(path string) ([]byte, error) {
@@ -175,6 +185,7 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 		SiteDomain:               cfg.SiteDomain,
 	}
 
+	fmt.Printf("tagresolver.NewTagResolverHelper uri %s\n", uri)
 	helper := tagresolver.NewTagResolverHelper(uri, resourceReader, resolverCfg)
 
 	basePage := rc.NewBasePageModel()
