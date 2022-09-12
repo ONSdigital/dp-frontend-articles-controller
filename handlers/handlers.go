@@ -183,6 +183,7 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 		AssetNames:               assets.AssetNames,
 		PatternLibraryAssetsPath: cfg.PatternLibraryAssetsPath,
 		SiteDomain:               cfg.SiteDomain,
+		Language:                 lang,
 	}
 
 	fmt.Printf("tagresolver.NewTagResolverHelper uri %s\n", uri)
