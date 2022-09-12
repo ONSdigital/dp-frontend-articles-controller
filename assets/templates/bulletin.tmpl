@@ -1,3 +1,32 @@
+{{ define "scripts-bulletin" }}
+  <script src="https://pym.nprapps.org/pym.v1.min.js"></script>
+  <script>
+    function buildEmbedCode(embedCode, height) {
+      // replace any existing height attributes caused by multiple
+      // re-sizes when child page uses JS to hide on page elements
+      if (embedCode.indexOf("height") !== -1) {
+        return embedCode.replace(/height=(\"|')[^(\"|')]*(\"|') /, 'height="' + height + 'px" ')
+      }
+
+      return embedCode.substr(0, 7) + ' height="' + height + 'px" ' + embedCode.substr(8, embedCode.length);
+    }
+
+    function addIframeHeightToEmbedCode(height) {
+      var input = document.getElementById("embed-" + this.id);
+      input.value = buildEmbedCode(input.value, height);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll("div.pym-interactive").forEach((interactive) => {
+        const pymParent = new pym.Parent(interactive.id, interactive.dataset.url, {
+          title: interactive.dataset.title
+        });
+
+        pymParent.onMessage('height', addIframeHeightToEmbedCode);
+      });
+    })
+  </script>
+{{ end }}
 <div class="ons-page__container ons-container bulletin">
   {{ template "partials/breadcrumb" . }}
 
