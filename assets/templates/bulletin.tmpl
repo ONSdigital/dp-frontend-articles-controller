@@ -17,7 +17,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      document.querySelectorAll("div.pym-interactive").forEach((interactive) => {
+      document.querySelectorAll("div.ons-tag__pym-interactive").forEach((interactive) => {
         const pymParent = new pym.Parent(interactive.id, interactive.dataset.url, {
           title: interactive.dataset.title
         });
