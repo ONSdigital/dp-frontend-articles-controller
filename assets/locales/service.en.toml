@@ -66,15 +66,15 @@ description = "You might also be interested in"
 one = "You might also be interested in"
 
 [ThisHasBeenSuperseded]
-description = "This has been superseded."
+description = "This has been superseded"
 one = "This has been superseded"
 
 [ThisIsLatestRelease]
-description = "This is the latest release."
+description = "This is the latest release"
 one = "This is the latest release"
 
 [ThisIsNotLatestRelease]
-description = "This is not the latest release."
+description = "This is not the latest release"
 one = "This is not the latest release"
 
 [ViewCorrectedVersion]

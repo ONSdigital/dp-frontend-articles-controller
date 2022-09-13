@@ -35,7 +35,7 @@ one = "Print this bwletin ystadegol"
 
 [DownloadAsPdf]
 description = "Download as PDF"
-one = "Download as PDF"
+one = "Lawrlwytho fel PDF"
 
 [TableOfContents]
 description = "Table of contents"
@@ -66,15 +66,15 @@ description = "You might also be interested in"
 one = "Efallai y bydd hefyd gennych ddiddordeb yn"
 
 [ThisHasBeenSuperseded]
-description = "This has been superseded."
+description = "This has been superseded"
 one = "This has been superseded"
 
 [ThisIsLatestRelease]
-description = "This is the latest release."
-one = "This is the latest release"
+description = "This is the latest release"
+one = "Hwn yw'r datganiad diweddaraf"
 
 [ThisIsNotLatestRelease]
-description = "This is not the latest release."
+description = "This is not the latest release"
 one = "This is not the latest release"
 
 [ViewCorrectedVersion]
@@ -87,11 +87,11 @@ one = "View superseded version"
 
 [ViewPreviousReleases]
 description = "View previous releases"
-one = "View previous releases"
+one = "Gweld datganiadau blaenorol"
 
 [ViewLatestRelease]
 description = "View latest release"
-one = "View latest release"
+one = "Gweld y datganiad diweddaraf"
 
 [CorrectionsAndNotices]
 description = "Corrections and notices"
@@ -131,11 +131,11 @@ other = "Gweld datganiadau blaenorol"
 
 [StatusLineViewCorrectedVersion]
 description = "View corrected version"
-one = "View corrected version (cy)"
+one = "Gweld y fersiwn wedi'i chywiro"
 
 [StatusLineViewLatestRelease]
 description = "View latest release"
-one = "View latest release (cy)"
+one = "Gweld y datganiad diweddaraf"
 
 [StatusLineReleaseLatest]
 description = "Latest"
