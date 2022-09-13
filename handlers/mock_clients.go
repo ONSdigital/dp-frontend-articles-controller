@@ -153,6 +153,21 @@ func (mr *MockZebedeeClientMockRecorder) GetBreadcrumb(ctx, userAccessToken, col
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBreadcrumb", reflect.TypeOf((*MockZebedeeClient)(nil).GetBreadcrumb), ctx, userAccessToken, collectionID, lang, uri)
 }
 
+// GetHomepageContent mocks base method.
+func (m *MockZebedeeClient) GetHomepageContent(ctx context.Context, userAccessToken, collectionID, lang, path string) (zebedee.HomepageContent, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHomepageContent", ctx, userAccessToken, collectionID, lang, path)
+	ret0, _ := ret[0].(zebedee.HomepageContent)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetHomepageContent indicates an expected call of GetHomepageContent.
+func (mr *MockZebedeeClientMockRecorder) GetHomepageContent(ctx, userAccessToken, collectionID, lang, path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHomepageContent", reflect.TypeOf((*MockZebedeeClient)(nil).GetHomepageContent), ctx, userAccessToken, collectionID, lang, path)
+}
+
 // MockArticlesApiClient is a mock of ArticlesApiClient interface.
 type MockArticlesApiClient struct {
 	ctrl     *gomock.Controller

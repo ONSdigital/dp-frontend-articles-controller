@@ -142,6 +142,7 @@ func TestUnitHandlers(t *testing.T) {
 		Convey("it returns 200 when rendered succesfully", func() {
 			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, url).Return(&b, nil)
 			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, accessToken, collectionID, lang, b.URI)
+			mockZebedeeClient.EXPECT().GetHomepageContent(ctx, accessToken, collectionID, lang, "/")
 			mockRenderClient.EXPECT().NewBasePageModel()
 			mockRenderClient.EXPECT().BuildPage(w, gomock.Any(), "bulletin")
 
@@ -156,6 +157,7 @@ func TestUnitHandlers(t *testing.T) {
 		Convey("it returns 200 when rendered succesfully without headers or cookies", func() {
 			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, "", "", lang, url).Return(&b, nil)
 			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, "", "", lang, b.URI)
+			mockZebedeeClient.EXPECT().GetHomepageContent(ctx, "", "", lang, "/")
 			mockRenderClient.EXPECT().NewBasePageModel()
 			mockRenderClient.EXPECT().BuildPage(w, gomock.Any(), "bulletin")
 
@@ -167,6 +169,7 @@ func TestUnitHandlers(t *testing.T) {
 		})
 
 		Convey("it returns 500 when there is an error getting the bulletin from Zebedee", func() {
+			mockZebedeeClient.EXPECT().GetHomepageContent(ctx, accessToken, collectionID, lang, "/")
 			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, url).Return(nil, errors.New(("error reading data")))
 
 			req := httptest.NewRequest("GET", fmt.Sprintf(requestUrlFormat, url), nil)
@@ -178,6 +181,7 @@ func TestUnitHandlers(t *testing.T) {
 		})
 
 		Convey("it returns 500 when there is an error getting the breadcrumbs from Zebedee", func() {
+			mockZebedeeClient.EXPECT().GetHomepageContent(ctx, accessToken, collectionID, lang, "/")
 			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, url).Return(&b, nil)
 			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, accessToken, collectionID, lang, b.URI).Return([]zebedee.Breadcrumb{}, errors.New(("error reading breadcrumbs")))
 			req := httptest.NewRequest("GET", fmt.Sprintf(requestUrlFormat, url), nil)
