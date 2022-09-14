@@ -15,7 +15,7 @@
   <section id="section-summary">
     <h2>{{ localise "SectionTitleSummaryOfRequest" .Language 1 }}</h2>
     {{ range .BodyMarkdown }}
-      {{ markdown .}}
+      {{ markdown . }}
     {{ end }}
   </section>
 

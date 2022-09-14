@@ -211,7 +211,7 @@ one = "Ad Hoc"
 
 [StatusLineReferenceNumber]
 description = "Reference number"
-one = "Reference number (cy)"
+one = "Rhif cyfeirnod"
 
 [SectionTitleSummaryOfRequest]
 description = "Summary of request"
@@ -219,8 +219,8 @@ one = "Crynodeb o'r cais"
 
 [SectionTitleDownloadAssociatedWithRequest]
 description = "Download associated with request"
-one = "Lawrlwyth cysylltiol ar cais"
-other = "Downloads associated with request (cy)"
+one = "Lawrlwythiad sy'n gysylltiedig â'r cais"
+other = "Lawrlwythiadau sy'n gysylltiedig â'r cais"
 
 [SectionTitleFurtherReading]
 description = "You might also be interested in"
@@ -228,8 +228,8 @@ one = "Efallai y bydd hefyd gennych ddiddordeb yn"
 
 [FurtherReadingAllRequestedData]
 description = "All user requested data"
-one = "All user requested data (cy)"
+one = "Yr holl ddata y gwnaed cais amdanynt gan ddefnyddwyr"
 
 [FurtherReadingMakingARequest]
 description = "Making a request"
-one = "Making a request (cy)"
+one = "Gwneud cais"
