@@ -317,6 +317,7 @@ func TestUnitMapper(t *testing.T) {
 				NextRelease:   "",
 				LatestRelease: true,
 				DatasetID:     "22",
+				Survey:        "census",
 			},
 			LatestReleaseURI: "uri/2022",
 			Sections: []zebedee.Section{
@@ -483,6 +484,7 @@ func TestUnitMapper(t *testing.T) {
 				So(model.LatestRelease, ShouldBeTrue)
 				So(model.LatestReleaseUri, ShouldEqual, bulletin.LatestReleaseURI)
 				So(model.DatasetId, ShouldEqual, bulletin.Description.DatasetID)
+				So(model.Census2021, ShouldEqual, true)
 				So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 				assertSections(model.Sections, bulletin.Sections)
 				assertSections(model.Accordion, bulletin.Accordion)

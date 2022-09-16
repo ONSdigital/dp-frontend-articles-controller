@@ -40,6 +40,7 @@ type BulletinModel struct {
 	LatestReleaseUri  string        `json:"latestReleaseUri"`
 	ContentsView      []ViewSection `json:"contentsView"`
 	ShareLinks        ShareLinks    `json:"shareLinks"`
+	Census2021        bool          `json:"census_2021"`
 }
 
 // Intermediate view to aid template rendering of Sections and Accordion
@@ -221,6 +222,7 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 	model.Language = lang
 	model.BetaBannerEnabled = true
 	model.Type = bulletin.Type
+	model.Census2021 = bulletin.Description.Survey == "census"
 	model.Metadata = coreModel.Metadata{
 		Title:       bulletin.Description.Title,
 		Description: bulletin.Description.MetaDescription,
