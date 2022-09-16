@@ -41,6 +41,8 @@ type BulletinModel struct {
 	ContentsView      []ViewSection `json:"contentsView"`
 	ShareLinks        ShareLinks    `json:"shareLinks"`
 	Census2021        bool          `json:"census_2021"`
+	AboutTheData      bool          `json:"about_the_data"`
+	Auxiliary         []Section     `json:"auxiliary"`
 }
 
 // Intermediate view to aid template rendering of Sections and Accordion
@@ -223,6 +225,7 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 	model.BetaBannerEnabled = true
 	model.Type = bulletin.Type
 	model.Census2021 = bulletin.Description.Survey == "census"
+	model.AboutTheData = model.Census2021
 	model.Metadata = coreModel.Metadata{
 		Title:       bulletin.Description.Title,
 		Description: bulletin.Description.MetaDescription,
@@ -374,6 +377,27 @@ func populateContents(model *BulletinModel) {
 			AnchorFragment: "toc",
 		}
 		views[index].Language = model.Language
+	}
+
+	if model.AboutTheData {
+		model.Auxiliary = append(model.Auxiliary, Section{
+			Title:    helper.Localise("PageSectionAboutTheData", model.Language, 1),
+			Markdown: helper.Localise("AboutTheDataMarkdown", model.Language, 1),
+		})
+		views = append(views, ViewSection{
+			Id:     "aboutthedata",
+			Type:   "auxiliary",
+			Source: &model.Auxiliary,
+			Index:  0,
+		})
+		views[len(views)-1].BackTo = coreModel.BackTo{
+			Text: coreModel.Localisation{
+				LocaleKey: "BackToContents",
+				Plural:    4,
+			},
+			AnchorFragment: "toc",
+		}
+		views[len(views)-1].Language = model.Language
 	}
 
 	model.TableOfContents = createTableOfContents(views)

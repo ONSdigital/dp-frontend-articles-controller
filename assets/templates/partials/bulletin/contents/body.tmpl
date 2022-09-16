@@ -1,12 +1,18 @@
 <div class="content-body ons-pl-grid-col">
   {{ range $sectionView := .ContentsView }}
-    <section id="{{ $sectionView.Id }}">
+    {{ if eq $sectionView.Type "auxiliary"}}
+      {{ if eq $sectionView.Id "aboutthedata" }}
+        {{ template "partials/bulletin/contents/about-the-data"  $sectionView }}
+      {{ end }}
+    {{ else }}
       {{ $content := index $sectionView.Source $sectionView.Index }}
-      <h2>{{ $content.Title }}</h2>
-      {{ markdown $content.Markdown }}
-      <div class="ons-u-mb-l ons-u-mt-l ons-u-vh@m">
-        {{ template "partials/back-to" $sectionView }}
-      </div>
-    </section>
+      <section id="{{ $sectionView.Id }}">
+        <h2>{{ $content.Title }}</h2>
+        {{ markdown $content.Markdown }}
+        <div class="ons-u-mb-l ons-u-mt-l ons-u-vh@m">
+          {{ template "partials/back-to" $sectionView }}
+        </div>
+      </section>
+    {{ end }}
   {{ end }}
 </div>
