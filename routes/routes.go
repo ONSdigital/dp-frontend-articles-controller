@@ -26,5 +26,6 @@ func Setup(ctx context.Context, r *mux.Router, cfg *config.Config, c Clients) {
 	log.Info(ctx, "adding routes")
 	r.StrictSlash(true).Path("/health").HandlerFunc(c.HealthCheckHandler)
 	r.StrictSlash(true).Path("/sixteens{uri:/.*}").Methods("GET").HandlerFunc(handlers.SixteensBulletin(*cfg, c.Render, c.Zebedee, c.ArticlesAPI))
+	r.StrictSlash(true).Path("/foi{uri:/.*}").Methods("GET").HandlerFunc(handlers.FoiPage(*cfg, c.Render, c.Zebedee, c.ArticlesAPI))
 	r.StrictSlash(true).Path("/{uri:.*}").Methods("GET").HandlerFunc(handlers.Bulletin(*cfg, c.Render, c.Zebedee, c.ArticlesAPI))
 }

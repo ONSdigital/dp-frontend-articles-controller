@@ -28,6 +28,13 @@ func SixteensBulletin(cfg config.Config, rc RenderClient, zc ZebedeeClient, ac A
 	})
 }
 
+// FoiPage handles foi requests
+func FoiPage(cfg config.Config, rc RenderClient, zc ZebedeeClient, ac ArticlesApiClient) http.HandlerFunc {
+	return dphandlers.ControllerHandler(func(w http.ResponseWriter, r *http.Request, lang, collectionID, accessToken string) {
+		foiPage(w, r, accessToken, collectionID, lang, rc, zc, ac, cfg)
+	})
+}
+
 func sixteensBulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collectionID, lang string, rc RenderClient, zc ZebedeeClient, ac ArticlesApiClient, cfg config.Config) {
 	ctx := req.Context()
 	muxVars := mux.Vars(req)
@@ -78,5 +85,30 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 		requestProtocol = "https"
 	}
 	model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs, lang, requestProtocol)
+	rc.BuildPage(w, model, "bulletin")
+}
+
+func foiPage(w http.ResponseWriter, req *http.Request, userAccessToken, collectionID, lang string, rc RenderClient, zc ZebedeeClient, ac ArticlesApiClient, cfg config.Config) {
+	ctx := req.Context()
+	muxVars := mux.Vars(req)
+	uri := muxVars["uri"]
+	// TODO: review naming
+	bulletin, err := ac.GetLegacyBulletin(ctx, userAccessToken, collectionID, lang, uri)
+
+	if err != nil {
+		setStatusCode(req, w, err)
+		return
+	}
+
+	breadcrumbs, err := zc.GetBreadcrumb(ctx, userAccessToken, collectionID, lang, bulletin.URI)
+	if err != nil {
+		setStatusCode(req, w, err)
+		return
+	}
+
+	basePage := rc.NewBasePageModel()
+
+	//TODO: add model here
+	model := mapper.CreateFoiModel(basePage, *bulletin, breadcrumbs, lang)
 	rc.BuildPage(w, model, "bulletin")
 }

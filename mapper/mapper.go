@@ -42,6 +42,11 @@ type BulletinModel struct {
 	ShareLinks        ShareLinks    `json:"shareLinks"`
 }
 
+type FoiModel struct {
+	coreModel.Page
+	Summary string `json:"summary"`
+}
+
 // Intermediate view to aid template rendering of Sections and Accordion
 type ViewSection struct {
 	Id       string
@@ -342,6 +347,16 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 
 	currentUrl := getCurrentUrl(requestProtocol, model.SiteDomain, model.URI, lang)
 	model.ShareLinks = createShareLinks(model.Metadata.Title, currentUrl)
+
+	return model
+}
+
+func CreateFoiModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb, lang string) FoiModel {
+	model := FoiModel{
+		Page: basePage,
+	}
+
+	model.Page.Breadcrumb = mapBreadcrumbTrail(bcs, model.Language)
 
 	return model
 }
