@@ -10,6 +10,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const homepagePath = "/"
+
 func setStatusCode(req *http.Request, w http.ResponseWriter, err error) {
 	status := http.StatusInternalServerError
 	if err, ok := err.(ClientError); ok {
@@ -59,6 +61,12 @@ func Bulletin(cfg config.Config, rc RenderClient, zc ZebedeeClient, ac ArticlesA
 
 func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collectionID, lang string, rc RenderClient, zc ZebedeeClient, ac ArticlesApiClient, cfg config.Config) {
 	ctx := req.Context()
+
+	homepageContent, err := zc.GetHomepageContent(ctx, userAccessToken, collectionID, lang, homepagePath)
+	if err != nil {
+		log.Warn(ctx, "unable to get homepage content", log.FormatErrors([]error{err}), log.Data{"homepage_content": err})
+	}
+
 	bulletin, err := ac.GetLegacyBulletin(ctx, userAccessToken, collectionID, lang, req.URL.EscapedPath())
 
 	if err != nil {
@@ -77,6 +85,6 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 	if req.TLS != nil {
 		requestProtocol = "https"
 	}
-	model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs, lang, requestProtocol)
+	model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs, lang, requestProtocol, homepageContent.ServiceMessage, homepageContent.EmergencyBanner)
 	rc.BuildPage(w, model, "bulletin")
 }

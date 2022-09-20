@@ -459,15 +459,38 @@ func TestUnitMapper(t *testing.T) {
 				URI: "/economy/product",
 			},
 		}
+
+		serviceMessage := "Service Message"
+		emergencyBannerTitle := "Emergency Title"
+		emergencyBannerType := "notable-death"
+		emergencyBannerDescription := "Emergency Description"
+		emergencyBannerUri := "https://example.com/emergency"
+		emergencyBannerLinkText := "Attention, this is an emergency. There's an emergency going on."
+		bannerData := zebedee.EmergencyBanner{
+			Title:       emergencyBannerTitle,
+			Type:        emergencyBannerType,
+			Description: emergencyBannerDescription,
+			URI:         emergencyBannerUri,
+			LinkText:    emergencyBannerLinkText,
+		}
+
 		Convey("When the bulletin URI is not a previous version", func() {
 			bulletin.URI = "the/bulletin/uri/path/version"
+
 			Convey("CreateBulletinModel maps correctly", func() {
 				requestProtocol := "https"
-				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol)
+				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol, serviceMessage, bannerData)
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
 				So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
 				So(model.BetaBannerEnabled, ShouldBeTrue)
+				So(model.BetaBannerEnabled, ShouldBeTrue)
+				So(model.ServiceMessage, ShouldEqual, serviceMessage)
+				So(model.EmergencyBanner.Title, ShouldEqual, emergencyBannerTitle)
+				So(model.EmergencyBanner.Type, ShouldEqual, emergencyBannerType)
+				So(model.EmergencyBanner.Description, ShouldEqual, emergencyBannerDescription)
+				So(model.EmergencyBanner.URI, ShouldEqual, emergencyBannerUri)
+				So(model.EmergencyBanner.LinkText, ShouldEqual, emergencyBannerLinkText)
 				So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
 				So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
 				So(model.Metadata.Keywords, ShouldResemble, bulletin.Description.Keywords)
@@ -528,10 +551,17 @@ func TestUnitMapper(t *testing.T) {
 			bulletin.URI = "the/bulletin/uri/path/previous/version"
 			Convey("CreateBulletinModel maps correctly", func() {
 				requestProtocol := "https"
-				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol)
+				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol, serviceMessage, bannerData)
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
 				So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
+				So(model.BetaBannerEnabled, ShouldBeTrue)
+				So(model.ServiceMessage, ShouldEqual, serviceMessage)
+				So(model.EmergencyBanner.Title, ShouldEqual, emergencyBannerTitle)
+				So(model.EmergencyBanner.Type, ShouldEqual, emergencyBannerType)
+				So(model.EmergencyBanner.Description, ShouldEqual, emergencyBannerDescription)
+				So(model.EmergencyBanner.URI, ShouldEqual, emergencyBannerUri)
+				So(model.EmergencyBanner.LinkText, ShouldEqual, emergencyBannerLinkText)
 				So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
 				So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
 				So(model.Metadata.Keywords, ShouldResemble, bulletin.Description.Keywords)

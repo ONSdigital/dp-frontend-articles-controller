@@ -214,11 +214,26 @@ func CreateSixteensBulletinModel(basePage coreModel.Page, bulletin articles.Bull
 	return model
 }
 
-func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb, lang, requestProtocol string) BulletinModel {
+func mapEmergencyBanner(bannerData zebedee.EmergencyBanner) coreModel.EmergencyBanner {
+	var mappedEmergencyBanner coreModel.EmergencyBanner
+	emptyBannerObj := zebedee.EmergencyBanner{}
+	if bannerData != emptyBannerObj {
+		mappedEmergencyBanner.Title = bannerData.Title
+		mappedEmergencyBanner.Type = strings.Replace(bannerData.Type, "_", "-", -1)
+		mappedEmergencyBanner.Description = bannerData.Description
+		mappedEmergencyBanner.URI = bannerData.URI
+		mappedEmergencyBanner.LinkText = bannerData.LinkText
+	}
+	return mappedEmergencyBanner
+}
+
+func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb, lang, requestProtocol, serviceMessage string, emergencyBannerContent zebedee.EmergencyBanner) BulletinModel {
 	model := BulletinModel{
 		Page: basePage,
 	}
 	model.Language = lang
+	model.ServiceMessage = serviceMessage
+	model.EmergencyBanner = mapEmergencyBanner(emergencyBannerContent)
 	model.BetaBannerEnabled = true
 	model.Type = bulletin.Type
 	model.Metadata = coreModel.Metadata{

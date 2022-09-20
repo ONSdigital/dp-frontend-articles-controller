@@ -27,6 +27,7 @@ type RenderClient interface {
 // ZebedeeClient is an interface for zebedee client
 type ZebedeeClient interface {
 	GetBreadcrumb(ctx context.Context, userAccessToken, collectionID, lang, uri string) ([]zebedee.Breadcrumb, error)
+	GetHomepageContent(ctx context.Context, userAccessToken, collectionID, lang, path string) (m zebedee.HomepageContent, err error)
 }
 
 // ArticlesApiClient is an interface for the Articles API client
