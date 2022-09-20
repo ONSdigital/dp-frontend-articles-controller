@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/ONSdigital/dp-frontend-articles-controller/config"
 	"github.com/ONSdigital/dp-frontend-articles-controller/mapper"
@@ -87,4 +89,28 @@ func bulletin(w http.ResponseWriter, req *http.Request, userAccessToken, collect
 	}
 	model := mapper.CreateBulletinModel(basePage, *bulletin, breadcrumbs, lang, requestProtocol, homepageContent.ServiceMessage, homepageContent.EmergencyBanner)
 	rc.BuildPage(w, model, "bulletin")
+}
+
+func BulletinData(cfg config.Config, ac ArticlesApiClient) http.HandlerFunc {
+	return dphandlers.ControllerHandler(func(w http.ResponseWriter, req *http.Request, lang, collectionID, accessToken string) {
+		bulletinUrl := strings.TrimSuffix(req.URL.EscapedPath(), "/data")
+		bulletin, err := ac.GetLegacyBulletin(req.Context(), accessToken, collectionID, lang, bulletinUrl)
+
+		if err != nil {
+			setStatusCode(req, w, err)
+			return
+		}
+
+		data, err := json.Marshal(bulletin)
+		if err != nil {
+			setStatusCode(req, w, err)
+			return
+		}
+
+		w.Header().Set("content-type", "application/json")
+		if _, err = w.Write(data); err != nil {
+			setStatusCode(req, w, err)
+			return
+		}
+	})
 }
