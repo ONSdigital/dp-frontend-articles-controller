@@ -95,7 +95,6 @@ func BulletinData(cfg config.Config, ac ArticlesApiClient) http.HandlerFunc {
 	return dphandlers.ControllerHandler(func(w http.ResponseWriter, req *http.Request, lang, collectionID, accessToken string) {
 		bulletinUrl := strings.TrimSuffix(req.URL.EscapedPath(), "/data")
 		bulletin, err := ac.GetLegacyBulletin(req.Context(), accessToken, collectionID, lang, bulletinUrl)
-
 		if err != nil {
 			setStatusCode(req, w, err)
 			return
