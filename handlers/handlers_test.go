@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -184,6 +185,65 @@ func TestUnitHandlers(t *testing.T) {
 			mockZebedeeClient.EXPECT().GetHomepageContent(ctx, accessToken, collectionID, lang, "/")
 			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, url).Return(&b, nil)
 			mockZebedeeClient.EXPECT().GetBreadcrumb(ctx, accessToken, collectionID, lang, b.URI).Return([]zebedee.Breadcrumb{}, errors.New(("error reading breadcrumbs")))
+			req := httptest.NewRequest("GET", fmt.Sprintf(requestUrlFormat, url), nil)
+			setRequestHeaders(req)
+
+			router.ServeHTTP(w, req)
+
+			So(w.Code, ShouldEqual, http.StatusInternalServerError)
+		})
+	})
+
+	Convey("test Bulletin '/data' endpoint", t, func() {
+		requestUrlFormat := "http://localhost:26500%s"
+		b := articles.Bulletin{
+			URI:  "/a/bulletin/url",
+			Type: "bulletin",
+		}
+		url := b.URI + "/data"
+
+		mockArticlesApiClient := NewMockArticlesApiClient(mockCtrl)
+		mockConfig := config.Config{}
+		router := mux.NewRouter()
+		router.HandleFunc(url, BulletinData(mockConfig, mockArticlesApiClient))
+		w := httptest.NewRecorder()
+
+		js, _ := json.Marshal(b)
+		Convey("when the release is retrieved successfully", func() {
+			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, b.URI).Return(&b, nil)
+
+			req := httptest.NewRequest("GET", fmt.Sprintf(requestUrlFormat, url), nil)
+			setRequestHeaders(req)
+
+			router.ServeHTTP(w, req)
+
+			Convey("it returns 200 with the expected json payload ", func() {
+				So(w.Code, ShouldEqual, http.StatusOK)
+				So(w.Body.Bytes(), ShouldResemble, js)
+			})
+			Convey("and the content type is 'application/json' ", func() {
+				So(w.Header().Get("content-type"), ShouldEqual, "application/json")
+			})
+		})
+
+		Convey("when the release is retrieved successfully without headers or cookies", func() {
+			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, "", "", lang, b.URI).Return(&b, nil)
+
+			req := httptest.NewRequest("GET", fmt.Sprintf(requestUrlFormat, url), nil)
+
+			router.ServeHTTP(w, req)
+
+			Convey("it returns 200 with the expected json payload ", func() {
+				So(w.Code, ShouldEqual, http.StatusOK)
+				So(w.Body.Bytes(), ShouldResemble, js)
+			})
+			Convey("and the content type is 'application/json' ", func() {
+				So(w.Header().Get("content-type"), ShouldEqual, "application/json")
+			})
+		})
+
+		Convey("it returns 500 when there is an error getting the release from the api", func() {
+			mockArticlesApiClient.EXPECT().GetLegacyBulletin(ctx, accessToken, collectionID, lang, b.URI).Return(nil, errors.New("error reading data"))
 			req := httptest.NewRequest("GET", fmt.Sprintf(requestUrlFormat, url), nil)
 			setRequestHeaders(req)
 
