@@ -204,3 +204,11 @@ one = "Argraffu'r dudalen hon"
 [PageContentsTitle]
 description = "Page contents"
 one = "Cynnwys y dudalen"
+
+[PageSectionAboutTheData]
+description = "About the data"
+one = "Ynglŷn â'r data"
+
+[AboutTheDataMarkdown]
+description = "This release includes data from Census 2021"
+one = "This release includes data from Census 2021 (cy)"

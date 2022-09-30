@@ -317,6 +317,7 @@ func TestUnitMapper(t *testing.T) {
 				NextRelease:   "",
 				LatestRelease: true,
 				DatasetID:     "22",
+				Survey:        "census",
 			},
 			LatestReleaseURI: "uri/2022",
 			Sections: []zebedee.Section{
@@ -506,10 +507,12 @@ func TestUnitMapper(t *testing.T) {
 				So(model.LatestRelease, ShouldBeTrue)
 				So(model.LatestReleaseUri, ShouldEqual, bulletin.LatestReleaseURI)
 				So(model.DatasetId, ShouldEqual, bulletin.Description.DatasetID)
+				So(model.Census2021, ShouldEqual, true)
+				So(model.AboutTheData, ShouldEqual, true)
 				So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 				assertSections(model.Sections, bulletin.Sections)
 				assertSections(model.Accordion, bulletin.Accordion)
-				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion)
+				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion, model.AboutTheData)
 				assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
 				assertLinks(model.RelatedData, bulletin.RelatedData)
 				assertLinks(model.Links, bulletin.Links)
@@ -576,10 +579,12 @@ func TestUnitMapper(t *testing.T) {
 				So(model.LatestRelease, ShouldBeTrue)
 				So(model.LatestReleaseUri, ShouldEqual, bulletin.LatestReleaseURI)
 				So(model.DatasetId, ShouldEqual, bulletin.Description.DatasetID)
+				So(model.Census2021, ShouldEqual, true)
+				So(model.AboutTheData, ShouldEqual, true)
 				So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 				assertSections(model.Sections, bulletin.Sections)
 				assertSections(model.Accordion, bulletin.Accordion)
-				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion)
+				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion, model.AboutTheData)
 				assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
 				assertLinks(model.RelatedData, bulletin.RelatedData)
 				assertLinks(model.Links, bulletin.Links)
@@ -644,10 +649,14 @@ func assertShareLinks(shareLinks ShareLinks, uri, requestProtocol string) {
 	So(twitterParams.Get("url"), ShouldContainSubstring, uri)
 }
 
-func assertContentsView(found []ViewSection, expectedSections, expectedAccordion []zebedee.Section) {
+func assertContentsView(found []ViewSection, expectedSections, expectedAccordion []zebedee.Section, aboutTheData bool) {
 	totalSections := len(expectedSections)
 	totalAccordions := len(expectedAccordion)
-	So(len(found), ShouldEqual, totalSections+totalAccordions)
+	expectedSectionCount := totalSections + totalAccordions
+	if aboutTheData {
+		expectedSectionCount++
+	}
+	So(len(found), ShouldEqual, expectedSectionCount)
 	for i := range expectedSections {
 		So(found[i].Type, ShouldEqual, "section")
 	}

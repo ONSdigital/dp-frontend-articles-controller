@@ -204,3 +204,11 @@ one = "Print this page"
 [PageContentsTitle]
 description = "Page contents"
 one = "Page contents"
+
+[PageSectionAboutTheData]
+description = "About the data"
+one = "About the data"
+
+[AboutTheDataMarkdown]
+description = "This release includes data from Census 2021"
+one = "This release includes data from Census 2021"
