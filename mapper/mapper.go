@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"fmt"
+	"html/template"
 	"net/url"
 	"sort"
 	"strings"
@@ -230,6 +231,20 @@ func mapEmergencyBanner(bannerData zebedee.EmergencyBanner) coreModel.EmergencyB
 	return mappedEmergencyBanner
 }
 
+func createPreGTMJavaScript(title string, description BulletinModel) []template.JS {
+	return []template.JS{
+		template.JS(`dataLayer.push({
+			"analyticsOptOut": getUsageCookieValue(),
+			"gtm.whitelist": ["google","hjtc","lcl"],
+			"gtm.blacklist": ["customScripts","sp","adm","awct","k","d","j"],
+			"contentTitle": "` + title + `",
+			"release-date-status": "` + description.ReleaseDate + `",
+			"url": "` + description.URI + `",
+			"tag": "census"	
+		});`),
+	}
+}
+
 func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bcs []zebedee.Breadcrumb, lang, requestProtocol, serviceMessage string, emergencyBannerContent zebedee.EmergencyBanner) BulletinModel {
 	model := BulletinModel{
 		Page: basePage,
@@ -362,7 +377,7 @@ func CreateBulletinModel(basePage coreModel.Page, bulletin articles.Bulletin, bc
 
 	currentUrl := getCurrentUrl(requestProtocol, model.SiteDomain, model.URI, lang)
 	model.ShareLinks = createShareLinks(model.Metadata.Title, currentUrl)
-
+	model.PreGTMJavaScript = createPreGTMJavaScript(model.Metadata.Title, model)
 	return model
 }
 
