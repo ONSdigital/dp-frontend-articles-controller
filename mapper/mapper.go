@@ -232,6 +232,11 @@ func mapEmergencyBanner(bannerData zebedee.EmergencyBanner) coreModel.EmergencyB
 }
 
 func createPreGTMJavaScript(title string, description BulletinModel) []template.JS {
+	var censusTag string
+	if description.Census2021 {
+		censusTag = "census"
+	}
+
 	return []template.JS{
 		template.JS(`dataLayer.push({
 			"analyticsOptOut": getUsageCookieValue(),
@@ -240,7 +245,7 @@ func createPreGTMJavaScript(title string, description BulletinModel) []template.
 			"contentTitle": "` + title + `",
 			"release-date-status": "` + description.ReleaseDate + `",
 			"url": "` + description.URI + `",
-			"tag": "census"	
+			"tag": "` + censusTag + `"
 		});`),
 	}
 }
