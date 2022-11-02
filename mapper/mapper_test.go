@@ -510,6 +510,8 @@ func TestUnitMapper(t *testing.T) {
 				So(model.Census2021, ShouldEqual, true)
 				So(model.AboutTheData, ShouldEqual, true)
 				So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
+				So(model.PreGTMJavaScript, ShouldNotBeEmpty)
+				So(model.PreGTMJavaScript, ShouldNotBeBlank)
 				assertSections(model.Sections, bulletin.Sections)
 				assertSections(model.Accordion, bulletin.Accordion)
 				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion, model.AboutTheData)
