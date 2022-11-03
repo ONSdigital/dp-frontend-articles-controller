@@ -481,6 +481,7 @@ func TestUnitMapper(t *testing.T) {
 			Convey("CreateBulletinModel maps correctly", func() {
 				requestProtocol := "https"
 				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol, serviceMessage, bannerData)
+				preGTMJavaScript := createPreGTMJavaScript(model.Metadata.Title, model)
 
 				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
 				So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
@@ -511,6 +512,8 @@ func TestUnitMapper(t *testing.T) {
 				So(model.AboutTheData, ShouldEqual, true)
 				So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 				So(model.PreGTMJavaScript, ShouldNotBeEmpty)
+				So(len(model.PreGTMJavaScript), ShouldEqual, len(preGTMJavaScript))
+				So(model.PreGTMJavaScript[0], ShouldEqual, preGTMJavaScript[0])
 				assertSections(model.Sections, bulletin.Sections)
 				assertSections(model.Accordion, bulletin.Accordion)
 				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion, model.AboutTheData)
