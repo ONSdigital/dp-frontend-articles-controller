@@ -1,6 +1,7 @@
 package mapper
 
 import (
+	"html/template"
 	"net/url"
 	"sort"
 	"testing"
@@ -317,7 +318,6 @@ func TestUnitMapper(t *testing.T) {
 				NextRelease:   "",
 				LatestRelease: true,
 				DatasetID:     "22",
-				Survey:        "census",
 			},
 			LatestReleaseURI: "uri/2022",
 			Sections: []zebedee.Section{
@@ -475,155 +475,355 @@ func TestUnitMapper(t *testing.T) {
 			LinkText:    emergencyBannerLinkText,
 		}
 
-		Convey("When the bulletin URI is not a previous version", func() {
-			bulletin.URI = "the/bulletin/uri/path/version"
+		Convey("When the bulletin belongs to a census survey", func() {
+			bulletin.Description.Survey = "census"
 
-			Convey("CreateBulletinModel maps correctly", func() {
-				requestProtocol := "https"
-				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol, serviceMessage, bannerData)
-				preGTMJavaScript := createPreGTMJavaScript(model.Metadata.Title, model)
+			Convey("And the bulletin URI is not a previous version", func() {
+				bulletin.URI = "the/bulletin/uri/path/version"
 
-				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
-				So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
-				So(model.BetaBannerEnabled, ShouldBeTrue)
-				So(model.BetaBannerEnabled, ShouldBeTrue)
-				So(model.ServiceMessage, ShouldEqual, serviceMessage)
-				So(model.EmergencyBanner.Title, ShouldEqual, emergencyBannerTitle)
-				So(model.EmergencyBanner.Type, ShouldEqual, emergencyBannerType)
-				So(model.EmergencyBanner.Description, ShouldEqual, emergencyBannerDescription)
-				So(model.EmergencyBanner.URI, ShouldEqual, emergencyBannerUri)
-				So(model.EmergencyBanner.LinkText, ShouldEqual, emergencyBannerLinkText)
-				So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
-				So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
-				So(model.Metadata.Keywords, ShouldResemble, bulletin.Description.Keywords)
-				So(model.Summary, ShouldEqual, bulletin.Description.Summary)
-				So(model.Type, ShouldEqual, bulletin.Type)
-				So(model.URI, ShouldEqual, bulletin.URI)
-				So(model.ParentPath, ShouldEqual, "the/bulletin/uri/path")
-				So(model.CorrectedPath, ShouldBeEmpty)
-				So(model.Edition, ShouldEqual, bulletin.Description.Edition)
-				So(model.NationalStatistic, ShouldEqual, bulletin.Description.NationalStatistic)
-				So(model.ReleaseDate, ShouldEqual, bulletin.Description.ReleaseDate)
-				So(model.NextRelease, ShouldEqual, bulletin.Description.NextRelease)
-				So(model.LatestRelease, ShouldBeTrue)
-				So(model.LatestReleaseUri, ShouldEqual, bulletin.LatestReleaseURI)
-				So(model.DatasetId, ShouldEqual, bulletin.Description.DatasetID)
-				So(model.Census2021, ShouldEqual, true)
-				So(model.AboutTheData, ShouldEqual, true)
-				So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
-				So(model.PreGTMJavaScript, ShouldNotBeEmpty)
-				So(len(model.PreGTMJavaScript), ShouldEqual, len(preGTMJavaScript))
-				So(model.PreGTMJavaScript[0], ShouldEqual, preGTMJavaScript[0])
-				assertSections(model.Sections, bulletin.Sections)
-				assertSections(model.Accordion, bulletin.Accordion)
-				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion, model.AboutTheData)
-				assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
-				assertLinks(model.RelatedData, bulletin.RelatedData)
-				assertLinks(model.Links, bulletin.Links)
-				assertFigures(model.Charts, bulletin.Charts)
-				assertFigures(model.Tables, bulletin.Tables)
-				assertFigures(model.Images, bulletin.Images)
-				assertFigures(model.Equations, bulletin.Equations)
-				assertShareLinks(model.ShareLinks, bulletin.URI, requestProtocol)
-				So(len(model.Versions), ShouldEqual, len(bulletin.Versions))
-				// Versions should be sorted by date
-				sort.Slice(bulletin.Versions, func(i, j int) bool { return bulletin.Versions[i].ReleaseDate > bulletin.Versions[j].ReleaseDate })
-				for i, v := range bulletin.Versions {
-					f := model.Versions[i]
-					So(f.Date, ShouldEqual, v.ReleaseDate)
-					So(f.Markdown, ShouldEqual, v.Notice)
-					So(f.URI, ShouldEqual, v.URI)
-				}
-				So(len(model.Alerts), ShouldEqual, len(bulletin.Alerts))
-				// Alerts should be sorted by date
-				sort.Slice(bulletin.Alerts, func(i, j int) bool { return bulletin.Alerts[i].Date > bulletin.Alerts[j].Date })
-				for i, a := range bulletin.Alerts {
-					f := model.Alerts[i]
-					So(f.Date, ShouldEqual, a.Date)
-					So(f.Markdown, ShouldEqual, a.Markdown)
-				}
-				So(len(model.Breadcrumb), ShouldEqual, len(breadcrumbs))
-				for i, b := range breadcrumbs {
-					found := model.Breadcrumb[i]
-					if i == 0 && b.Description.Title == "Home" {
-						So(found.Title, ShouldEqual, "Hafan")
-					} else {
-						So(found.Title, ShouldEqual, b.Description.Title)
+				Convey("CreateBulletinModel maps correctly", func() {
+					requestProtocol := "https"
+					model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol, serviceMessage, bannerData)
+
+					So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
+					So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
+					So(model.BetaBannerEnabled, ShouldBeTrue)
+					So(model.BetaBannerEnabled, ShouldBeTrue)
+					So(model.ServiceMessage, ShouldEqual, serviceMessage)
+					So(model.EmergencyBanner.Title, ShouldEqual, emergencyBannerTitle)
+					So(model.EmergencyBanner.Type, ShouldEqual, emergencyBannerType)
+					So(model.EmergencyBanner.Description, ShouldEqual, emergencyBannerDescription)
+					So(model.EmergencyBanner.URI, ShouldEqual, emergencyBannerUri)
+					So(model.EmergencyBanner.LinkText, ShouldEqual, emergencyBannerLinkText)
+					So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
+					So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
+					So(model.Metadata.Keywords, ShouldResemble, bulletin.Description.Keywords)
+					So(model.Summary, ShouldEqual, bulletin.Description.Summary)
+					So(model.Type, ShouldEqual, bulletin.Type)
+					So(model.URI, ShouldEqual, bulletin.URI)
+					So(model.ParentPath, ShouldEqual, "the/bulletin/uri/path")
+					So(model.CorrectedPath, ShouldBeEmpty)
+					So(model.Edition, ShouldEqual, bulletin.Description.Edition)
+					So(model.NationalStatistic, ShouldEqual, bulletin.Description.NationalStatistic)
+					So(model.ReleaseDate, ShouldEqual, bulletin.Description.ReleaseDate)
+					So(model.NextRelease, ShouldEqual, bulletin.Description.NextRelease)
+					So(model.LatestRelease, ShouldBeTrue)
+					So(model.LatestReleaseUri, ShouldEqual, bulletin.LatestReleaseURI)
+					So(model.DatasetId, ShouldEqual, bulletin.Description.DatasetID)
+					So(model.Census2021, ShouldEqual, true)
+					So(model.AboutTheData, ShouldEqual, true)
+					So(model.PreGTMJavaScript, ShouldNotBeEmpty)
+					So(len(model.PreGTMJavaScript), ShouldEqual, 1)
+					expectedPreGTMJs := template.JS("dataLayer.push({\n" +
+						"\t\t\t\"analyticsOptOut\": getUsageCookieValue(),\n" +
+						"\t\t\t\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"],\n" +
+						"\t\t\t\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"],\n" +
+						"\t\t\t\"contentTitle\": \"" + bulletin.Description.Title + "\",\n" +
+						"\t\t\t\"release-date-status\": \"" + bulletin.Description.ReleaseDate + "\",\n" +
+						"\t\t\t\"url\": \"" + bulletin.URI + "\",\n" +
+						"\t\t\t\"tag\": \"census\"\n" +
+						"\t\t});")
+					So(model.PreGTMJavaScript[0], ShouldResemble, expectedPreGTMJs)
+					So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
+					assertSections(model.Sections, bulletin.Sections)
+					assertSections(model.Accordion, bulletin.Accordion)
+					assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion, model.AboutTheData)
+					assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
+					assertLinks(model.RelatedData, bulletin.RelatedData)
+					assertLinks(model.Links, bulletin.Links)
+					assertFigures(model.Charts, bulletin.Charts)
+					assertFigures(model.Tables, bulletin.Tables)
+					assertFigures(model.Images, bulletin.Images)
+					assertFigures(model.Equations, bulletin.Equations)
+					assertShareLinks(model.ShareLinks, bulletin.URI, requestProtocol)
+					So(len(model.Versions), ShouldEqual, len(bulletin.Versions))
+					// Versions should be sorted by date
+					sort.Slice(bulletin.Versions, func(i, j int) bool { return bulletin.Versions[i].ReleaseDate > bulletin.Versions[j].ReleaseDate })
+					for i, v := range bulletin.Versions {
+						f := model.Versions[i]
+						So(f.Date, ShouldEqual, v.ReleaseDate)
+						So(f.Markdown, ShouldEqual, v.Notice)
+						So(f.URI, ShouldEqual, v.URI)
 					}
-					So(found.URI, ShouldEqual, b.URI)
-				}
+					So(len(model.Alerts), ShouldEqual, len(bulletin.Alerts))
+					// Alerts should be sorted by date
+					sort.Slice(bulletin.Alerts, func(i, j int) bool { return bulletin.Alerts[i].Date > bulletin.Alerts[j].Date })
+					for i, a := range bulletin.Alerts {
+						f := model.Alerts[i]
+						So(f.Date, ShouldEqual, a.Date)
+						So(f.Markdown, ShouldEqual, a.Markdown)
+					}
+					So(len(model.Breadcrumb), ShouldEqual, len(breadcrumbs))
+					for i, b := range breadcrumbs {
+						found := model.Breadcrumb[i]
+						if i == 0 && b.Description.Title == "Home" {
+							So(found.Title, ShouldEqual, "Hafan")
+						} else {
+							So(found.Title, ShouldEqual, b.Description.Title)
+						}
+						So(found.URI, ShouldEqual, b.URI)
+					}
+				})
+			})
+			Convey("And the bulletin URI is a previous version", func() {
+				bulletin.URI = "the/bulletin/uri/path/previous/version"
+				Convey("CreateBulletinModel maps correctly", func() {
+					requestProtocol := "https"
+					model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol, serviceMessage, bannerData)
+
+					So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
+					So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
+					So(model.BetaBannerEnabled, ShouldBeTrue)
+					So(model.ServiceMessage, ShouldEqual, serviceMessage)
+					So(model.EmergencyBanner.Title, ShouldEqual, emergencyBannerTitle)
+					So(model.EmergencyBanner.Type, ShouldEqual, emergencyBannerType)
+					So(model.EmergencyBanner.Description, ShouldEqual, emergencyBannerDescription)
+					So(model.EmergencyBanner.URI, ShouldEqual, emergencyBannerUri)
+					So(model.EmergencyBanner.LinkText, ShouldEqual, emergencyBannerLinkText)
+					So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
+					So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
+					So(model.Metadata.Keywords, ShouldResemble, bulletin.Description.Keywords)
+					So(model.Type, ShouldEqual, bulletin.Type)
+					So(model.URI, ShouldEqual, bulletin.URI)
+					So(model.ParentPath, ShouldEqual, "the/bulletin/uri/path/previous")
+					So(model.CorrectedPath, ShouldEqual, "the/bulletin/uri/path")
+					So(model.Edition, ShouldEqual, bulletin.Description.Edition)
+					So(model.NationalStatistic, ShouldEqual, bulletin.Description.NationalStatistic)
+					So(model.ReleaseDate, ShouldEqual, bulletin.Description.ReleaseDate)
+					So(model.NextRelease, ShouldEqual, bulletin.Description.NextRelease)
+					So(model.LatestRelease, ShouldBeTrue)
+					So(model.LatestReleaseUri, ShouldEqual, bulletin.LatestReleaseURI)
+					So(model.DatasetId, ShouldEqual, bulletin.Description.DatasetID)
+					So(model.Census2021, ShouldEqual, true)
+					So(model.AboutTheData, ShouldEqual, true)
+					So(model.PreGTMJavaScript, ShouldNotBeEmpty)
+					So(len(model.PreGTMJavaScript), ShouldEqual, 1)
+					expectedPreGTMJs := template.JS("dataLayer.push({\n" +
+						"\t\t\t\"analyticsOptOut\": getUsageCookieValue(),\n" +
+						"\t\t\t\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"],\n" +
+						"\t\t\t\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"],\n" +
+						"\t\t\t\"contentTitle\": \"" + bulletin.Description.Title + "\",\n" +
+						"\t\t\t\"release-date-status\": \"" + bulletin.Description.ReleaseDate + "\",\n" +
+						"\t\t\t\"url\": \"" + bulletin.URI + "\",\n" +
+						"\t\t\t\"tag\": \"census\"\n" +
+						"\t\t});")
+					So(model.PreGTMJavaScript[0], ShouldResemble, expectedPreGTMJs)
+					So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
+					assertSections(model.Sections, bulletin.Sections)
+					assertSections(model.Accordion, bulletin.Accordion)
+					assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion, model.AboutTheData)
+					assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
+					assertLinks(model.RelatedData, bulletin.RelatedData)
+					assertLinks(model.Links, bulletin.Links)
+					assertFigures(model.Charts, bulletin.Charts)
+					assertFigures(model.Tables, bulletin.Tables)
+					assertFigures(model.Images, bulletin.Images)
+					assertFigures(model.Equations, bulletin.Equations)
+					assertShareLinks(model.ShareLinks, bulletin.URI, requestProtocol)
+					So(len(model.Versions), ShouldEqual, len(bulletin.Versions))
+					// Versions should be sorted by date
+					sort.Slice(bulletin.Versions, func(i, j int) bool { return bulletin.Versions[i].ReleaseDate > bulletin.Versions[j].ReleaseDate })
+					for i, v := range bulletin.Versions {
+						f := model.Versions[i]
+						So(f.Date, ShouldEqual, v.ReleaseDate)
+						So(f.Markdown, ShouldEqual, v.Notice)
+						So(f.URI, ShouldEqual, v.URI)
+					}
+					So(len(model.Alerts), ShouldEqual, len(bulletin.Alerts))
+					// Alerts should be sorted by date
+					sort.Slice(bulletin.Alerts, func(i, j int) bool { return bulletin.Alerts[i].Date > bulletin.Alerts[j].Date })
+					for i, a := range bulletin.Alerts {
+						f := model.Alerts[i]
+						So(f.Date, ShouldEqual, a.Date)
+						So(f.Markdown, ShouldEqual, a.Markdown)
+					}
+					So(len(model.Breadcrumb), ShouldEqual, len(breadcrumbs))
+					for i, b := range breadcrumbs {
+						found := model.Breadcrumb[i]
+						if i == 0 && b.Description.Title == "Home" {
+							So(found.Title, ShouldEqual, "Hafan")
+						} else {
+							So(found.Title, ShouldEqual, b.Description.Title)
+						}
+						So(found.URI, ShouldEqual, b.URI)
+					}
+				})
 			})
 		})
-		Convey("When the bulletin URI is a previous version", func() {
-			bulletin.URI = "the/bulletin/uri/path/previous/version"
-			Convey("CreateBulletinModel maps correctly", func() {
-				requestProtocol := "https"
-				model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol, serviceMessage, bannerData)
 
-				So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
-				So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
-				So(model.BetaBannerEnabled, ShouldBeTrue)
-				So(model.ServiceMessage, ShouldEqual, serviceMessage)
-				So(model.EmergencyBanner.Title, ShouldEqual, emergencyBannerTitle)
-				So(model.EmergencyBanner.Type, ShouldEqual, emergencyBannerType)
-				So(model.EmergencyBanner.Description, ShouldEqual, emergencyBannerDescription)
-				So(model.EmergencyBanner.URI, ShouldEqual, emergencyBannerUri)
-				So(model.EmergencyBanner.LinkText, ShouldEqual, emergencyBannerLinkText)
-				So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
-				So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
-				So(model.Metadata.Keywords, ShouldResemble, bulletin.Description.Keywords)
-				So(model.Type, ShouldEqual, bulletin.Type)
-				So(model.URI, ShouldEqual, bulletin.URI)
-				So(model.ParentPath, ShouldEqual, "the/bulletin/uri/path/previous")
-				So(model.CorrectedPath, ShouldEqual, "the/bulletin/uri/path")
-				So(model.Edition, ShouldEqual, bulletin.Description.Edition)
-				So(model.NationalStatistic, ShouldEqual, bulletin.Description.NationalStatistic)
-				So(model.ReleaseDate, ShouldEqual, bulletin.Description.ReleaseDate)
-				So(model.NextRelease, ShouldEqual, bulletin.Description.NextRelease)
-				So(model.LatestRelease, ShouldBeTrue)
-				So(model.LatestReleaseUri, ShouldEqual, bulletin.LatestReleaseURI)
-				So(model.DatasetId, ShouldEqual, bulletin.Description.DatasetID)
-				So(model.Census2021, ShouldEqual, true)
-				So(model.AboutTheData, ShouldEqual, true)
-				So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
-				assertSections(model.Sections, bulletin.Sections)
-				assertSections(model.Accordion, bulletin.Accordion)
-				assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion, model.AboutTheData)
-				assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
-				assertLinks(model.RelatedData, bulletin.RelatedData)
-				assertLinks(model.Links, bulletin.Links)
-				assertFigures(model.Charts, bulletin.Charts)
-				assertFigures(model.Tables, bulletin.Tables)
-				assertFigures(model.Images, bulletin.Images)
-				assertFigures(model.Equations, bulletin.Equations)
-				assertShareLinks(model.ShareLinks, bulletin.URI, requestProtocol)
-				So(len(model.Versions), ShouldEqual, len(bulletin.Versions))
-				// Versions should be sorted by date
-				sort.Slice(bulletin.Versions, func(i, j int) bool { return bulletin.Versions[i].ReleaseDate > bulletin.Versions[j].ReleaseDate })
-				for i, v := range bulletin.Versions {
-					f := model.Versions[i]
-					So(f.Date, ShouldEqual, v.ReleaseDate)
-					So(f.Markdown, ShouldEqual, v.Notice)
-					So(f.URI, ShouldEqual, v.URI)
-				}
-				So(len(model.Alerts), ShouldEqual, len(bulletin.Alerts))
-				// Alerts should be sorted by date
-				sort.Slice(bulletin.Alerts, func(i, j int) bool { return bulletin.Alerts[i].Date > bulletin.Alerts[j].Date })
-				for i, a := range bulletin.Alerts {
-					f := model.Alerts[i]
-					So(f.Date, ShouldEqual, a.Date)
-					So(f.Markdown, ShouldEqual, a.Markdown)
-				}
-				So(len(model.Breadcrumb), ShouldEqual, len(breadcrumbs))
-				for i, b := range breadcrumbs {
-					found := model.Breadcrumb[i]
-					if i == 0 && b.Description.Title == "Home" {
-						So(found.Title, ShouldEqual, "Hafan")
-					} else {
-						So(found.Title, ShouldEqual, b.Description.Title)
+		Convey("When the bulletin does not belong to a census survey", func() {
+			bulletin.Description.Survey = "other"
+
+			Convey("And the bulletin URI is not a previous version", func() {
+				bulletin.URI = "the/bulletin/uri/path/version"
+
+				Convey("CreateBulletinModel maps correctly", func() {
+					requestProtocol := "https"
+					model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol, serviceMessage, bannerData)
+
+					So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
+					So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
+					So(model.BetaBannerEnabled, ShouldBeTrue)
+					So(model.BetaBannerEnabled, ShouldBeTrue)
+					So(model.ServiceMessage, ShouldEqual, serviceMessage)
+					So(model.EmergencyBanner.Title, ShouldEqual, emergencyBannerTitle)
+					So(model.EmergencyBanner.Type, ShouldEqual, emergencyBannerType)
+					So(model.EmergencyBanner.Description, ShouldEqual, emergencyBannerDescription)
+					So(model.EmergencyBanner.URI, ShouldEqual, emergencyBannerUri)
+					So(model.EmergencyBanner.LinkText, ShouldEqual, emergencyBannerLinkText)
+					So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
+					So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
+					So(model.Metadata.Keywords, ShouldResemble, bulletin.Description.Keywords)
+					So(model.Summary, ShouldEqual, bulletin.Description.Summary)
+					So(model.Type, ShouldEqual, bulletin.Type)
+					So(model.URI, ShouldEqual, bulletin.URI)
+					So(model.ParentPath, ShouldEqual, "the/bulletin/uri/path")
+					So(model.CorrectedPath, ShouldBeEmpty)
+					So(model.Edition, ShouldEqual, bulletin.Description.Edition)
+					So(model.NationalStatistic, ShouldEqual, bulletin.Description.NationalStatistic)
+					So(model.ReleaseDate, ShouldEqual, bulletin.Description.ReleaseDate)
+					So(model.NextRelease, ShouldEqual, bulletin.Description.NextRelease)
+					So(model.LatestRelease, ShouldBeTrue)
+					So(model.LatestReleaseUri, ShouldEqual, bulletin.LatestReleaseURI)
+					So(model.DatasetId, ShouldEqual, bulletin.Description.DatasetID)
+					So(model.Census2021, ShouldEqual, false)
+					So(model.AboutTheData, ShouldEqual, false)
+					So(model.PreGTMJavaScript, ShouldNotBeEmpty)
+					So(len(model.PreGTMJavaScript), ShouldEqual, 1)
+					expectedPreGTMJs := template.JS("dataLayer.push({\n" +
+						"\t\t\t\"analyticsOptOut\": getUsageCookieValue(),\n" +
+						"\t\t\t\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"],\n" +
+						"\t\t\t\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"],\n" +
+						"\t\t\t\"contentTitle\": \"" + bulletin.Description.Title + "\",\n" +
+						"\t\t\t\"release-date-status\": \"" + bulletin.Description.ReleaseDate + "\",\n" +
+						"\t\t\t\"url\": \"" + bulletin.URI + "\",\n" +
+						"\t\t\t\"tag\": \"\"\n" +
+						"\t\t});")
+					So(model.PreGTMJavaScript[0], ShouldResemble, expectedPreGTMJs)
+					So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
+					assertSections(model.Sections, bulletin.Sections)
+					assertSections(model.Accordion, bulletin.Accordion)
+					assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion, model.AboutTheData)
+					assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
+					assertLinks(model.RelatedData, bulletin.RelatedData)
+					assertLinks(model.Links, bulletin.Links)
+					assertFigures(model.Charts, bulletin.Charts)
+					assertFigures(model.Tables, bulletin.Tables)
+					assertFigures(model.Images, bulletin.Images)
+					assertFigures(model.Equations, bulletin.Equations)
+					assertShareLinks(model.ShareLinks, bulletin.URI, requestProtocol)
+					So(len(model.Versions), ShouldEqual, len(bulletin.Versions))
+					// Versions should be sorted by date
+					sort.Slice(bulletin.Versions, func(i, j int) bool { return bulletin.Versions[i].ReleaseDate > bulletin.Versions[j].ReleaseDate })
+					for i, v := range bulletin.Versions {
+						f := model.Versions[i]
+						So(f.Date, ShouldEqual, v.ReleaseDate)
+						So(f.Markdown, ShouldEqual, v.Notice)
+						So(f.URI, ShouldEqual, v.URI)
 					}
-					So(found.URI, ShouldEqual, b.URI)
-				}
+					So(len(model.Alerts), ShouldEqual, len(bulletin.Alerts))
+					// Alerts should be sorted by date
+					sort.Slice(bulletin.Alerts, func(i, j int) bool { return bulletin.Alerts[i].Date > bulletin.Alerts[j].Date })
+					for i, a := range bulletin.Alerts {
+						f := model.Alerts[i]
+						So(f.Date, ShouldEqual, a.Date)
+						So(f.Markdown, ShouldEqual, a.Markdown)
+					}
+					So(len(model.Breadcrumb), ShouldEqual, len(breadcrumbs))
+					for i, b := range breadcrumbs {
+						found := model.Breadcrumb[i]
+						if i == 0 && b.Description.Title == "Home" {
+							So(found.Title, ShouldEqual, "Hafan")
+						} else {
+							So(found.Title, ShouldEqual, b.Description.Title)
+						}
+						So(found.URI, ShouldEqual, b.URI)
+					}
+				})
+			})
+			Convey("When the bulletin URI is a previous version", func() {
+				bulletin.URI = "the/bulletin/uri/path/previous/version"
+				Convey("CreateBulletinModel maps correctly", func() {
+					requestProtocol := "https"
+					model := CreateBulletinModel(basePage, bulletin, breadcrumbs, "cy", requestProtocol, serviceMessage, bannerData)
+
+					So(model.Page.PatternLibraryAssetsPath, ShouldEqual, basePage.PatternLibraryAssetsPath)
+					So(model.Page.SiteDomain, ShouldEqual, basePage.SiteDomain)
+					So(model.BetaBannerEnabled, ShouldBeTrue)
+					So(model.ServiceMessage, ShouldEqual, serviceMessage)
+					So(model.EmergencyBanner.Title, ShouldEqual, emergencyBannerTitle)
+					So(model.EmergencyBanner.Type, ShouldEqual, emergencyBannerType)
+					So(model.EmergencyBanner.Description, ShouldEqual, emergencyBannerDescription)
+					So(model.EmergencyBanner.URI, ShouldEqual, emergencyBannerUri)
+					So(model.EmergencyBanner.LinkText, ShouldEqual, emergencyBannerLinkText)
+					So(model.Metadata.Title, ShouldEqual, bulletin.Description.Title)
+					So(model.Metadata.Description, ShouldEqual, bulletin.Description.MetaDescription)
+					So(model.Metadata.Keywords, ShouldResemble, bulletin.Description.Keywords)
+					So(model.Type, ShouldEqual, bulletin.Type)
+					So(model.URI, ShouldEqual, bulletin.URI)
+					So(model.ParentPath, ShouldEqual, "the/bulletin/uri/path/previous")
+					So(model.CorrectedPath, ShouldEqual, "the/bulletin/uri/path")
+					So(model.Edition, ShouldEqual, bulletin.Description.Edition)
+					So(model.NationalStatistic, ShouldEqual, bulletin.Description.NationalStatistic)
+					So(model.ReleaseDate, ShouldEqual, bulletin.Description.ReleaseDate)
+					So(model.NextRelease, ShouldEqual, bulletin.Description.NextRelease)
+					So(model.LatestRelease, ShouldBeTrue)
+					So(model.LatestReleaseUri, ShouldEqual, bulletin.LatestReleaseURI)
+					So(model.DatasetId, ShouldEqual, bulletin.Description.DatasetID)
+					So(model.Census2021, ShouldEqual, false)
+					So(model.AboutTheData, ShouldEqual, false)
+					So(model.PreGTMJavaScript, ShouldNotBeEmpty)
+					So(len(model.PreGTMJavaScript), ShouldEqual, 1)
+					expectedPreGTMJs := template.JS("dataLayer.push({\n" +
+						"\t\t\t\"analyticsOptOut\": getUsageCookieValue(),\n" +
+						"\t\t\t\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"],\n" +
+						"\t\t\t\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"],\n" +
+						"\t\t\t\"contentTitle\": \"" + bulletin.Description.Title + "\",\n" +
+						"\t\t\t\"release-date-status\": \"" + bulletin.Description.ReleaseDate + "\",\n" +
+						"\t\t\t\"url\": \"" + bulletin.URI + "\",\n" +
+						"\t\t\t\"tag\": \"\"\n" +
+						"\t\t});")
+					So(model.PreGTMJavaScript[0], ShouldResemble, expectedPreGTMJs)
+					So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
+					assertSections(model.Sections, bulletin.Sections)
+					assertSections(model.Accordion, bulletin.Accordion)
+					assertContentsView(model.ContentsView, bulletin.Sections, bulletin.Accordion, model.AboutTheData)
+					assertLinks(model.RelatedBulletins, bulletin.RelatedBulletins)
+					assertLinks(model.RelatedData, bulletin.RelatedData)
+					assertLinks(model.Links, bulletin.Links)
+					assertFigures(model.Charts, bulletin.Charts)
+					assertFigures(model.Tables, bulletin.Tables)
+					assertFigures(model.Images, bulletin.Images)
+					assertFigures(model.Equations, bulletin.Equations)
+					assertShareLinks(model.ShareLinks, bulletin.URI, requestProtocol)
+					So(len(model.Versions), ShouldEqual, len(bulletin.Versions))
+					// Versions should be sorted by date
+					sort.Slice(bulletin.Versions, func(i, j int) bool { return bulletin.Versions[i].ReleaseDate > bulletin.Versions[j].ReleaseDate })
+					for i, v := range bulletin.Versions {
+						f := model.Versions[i]
+						So(f.Date, ShouldEqual, v.ReleaseDate)
+						So(f.Markdown, ShouldEqual, v.Notice)
+						So(f.URI, ShouldEqual, v.URI)
+					}
+					So(len(model.Alerts), ShouldEqual, len(bulletin.Alerts))
+					// Alerts should be sorted by date
+					sort.Slice(bulletin.Alerts, func(i, j int) bool { return bulletin.Alerts[i].Date > bulletin.Alerts[j].Date })
+					for i, a := range bulletin.Alerts {
+						f := model.Alerts[i]
+						So(f.Date, ShouldEqual, a.Date)
+						So(f.Markdown, ShouldEqual, a.Markdown)
+					}
+					So(len(model.Breadcrumb), ShouldEqual, len(breadcrumbs))
+					for i, b := range breadcrumbs {
+						found := model.Breadcrumb[i]
+						if i == 0 && b.Description.Title == "Home" {
+							So(found.Title, ShouldEqual, "Hafan")
+						} else {
+							So(found.Title, ShouldEqual, b.Description.Title)
+						}
+						So(found.URI, ShouldEqual, b.URI)
+					}
+				})
 			})
 		})
 	})
