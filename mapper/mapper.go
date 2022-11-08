@@ -91,7 +91,7 @@ func CreateSixteensBulletinModel(basePage coreModel.Page, bulletin articles.Bull
 	}
 	model.Language = lang
 	model.FeatureFlags.SixteensVersion = "67f6982"
-
+	model.Type = bulletin.Type
 	model.Metadata = coreModel.Metadata{
 		Title:       bulletin.Description.Title,
 		Description: bulletin.Description.MetaDescription,
@@ -238,15 +238,15 @@ func createPreGTMJavaScript(title string, description BulletinModel) []template.
 	}
 
 	return []template.JS{
-		template.JS(`dataLayer.push({
-			"analyticsOptOut": getUsageCookieValue(),
-			"gtm.whitelist": ["google","hjtc","lcl"],
-			"gtm.blacklist": ["customScripts","sp","adm","awct","k","d","j"],
-			"contentTitle": "` + title + `",
-			"release-date-status": "` + description.ReleaseDate + `",
-			"url": "` + description.URI + `",
-			"tag": "` + censusTag + `"
-		});`),
+		template.JS("dataLayer.push({" +
+			"\"analyticsOptOut\": getUsageCookieValue()," +
+			"\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"]," +
+			"\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"]," +
+			"\"contentTitle\": \"" + title + "\"," +
+			"\"release-date-status\": \"" + description.ReleaseDate + "\"," +
+			"\"url\": \"" + description.URI + "\"," +
+			"\"tag\": \"" + censusTag + "\"" +
+			"});"),
 	}
 }
 

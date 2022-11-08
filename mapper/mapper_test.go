@@ -236,15 +236,7 @@ func TestUnitMapper(t *testing.T) {
 					So(model.AboutTheData, ShouldEqual, true)
 					So(model.PreGTMJavaScript, ShouldNotBeEmpty)
 					So(len(model.PreGTMJavaScript), ShouldEqual, 1)
-					expectedPreGTMJs := template.JS("dataLayer.push({\n" +
-						"\t\t\t\"analyticsOptOut\": getUsageCookieValue(),\n" +
-						"\t\t\t\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"],\n" +
-						"\t\t\t\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"],\n" +
-						"\t\t\t\"contentTitle\": \"" + bulletin.Description.Title + "\",\n" +
-						"\t\t\t\"release-date-status\": \"" + bulletin.Description.ReleaseDate + "\",\n" +
-						"\t\t\t\"url\": \"" + bulletin.URI + "\",\n" +
-						"\t\t\t\"tag\": \"census\"\n" +
-						"\t\t});")
+					expectedPreGTMJs := createPreGTMJs(bulletin.Description.Title, bulletin.Description.ReleaseDate, bulletin.URI, "census")
 					So(model.PreGTMJavaScript[0], ShouldResemble, expectedPreGTMJs)
 					So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 					assertSections(model.Sections, bulletin.Sections)
@@ -376,15 +368,7 @@ func TestUnitMapper(t *testing.T) {
 					So(model.AboutTheData, ShouldEqual, true)
 					So(model.PreGTMJavaScript, ShouldNotBeEmpty)
 					So(len(model.PreGTMJavaScript), ShouldEqual, 1)
-					expectedPreGTMJs := template.JS("dataLayer.push({\n" +
-						"\t\t\t\"analyticsOptOut\": getUsageCookieValue(),\n" +
-						"\t\t\t\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"],\n" +
-						"\t\t\t\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"],\n" +
-						"\t\t\t\"contentTitle\": \"" + bulletin.Description.Title + "\",\n" +
-						"\t\t\t\"release-date-status\": \"" + bulletin.Description.ReleaseDate + "\",\n" +
-						"\t\t\t\"url\": \"" + bulletin.URI + "\",\n" +
-						"\t\t\t\"tag\": \"census\"\n" +
-						"\t\t});")
+					expectedPreGTMJs := createPreGTMJs(bulletin.Description.Title, bulletin.Description.ReleaseDate, bulletin.URI, "census")
 					So(model.PreGTMJavaScript[0], ShouldResemble, expectedPreGTMJs)
 					So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 					assertSections(model.Sections, bulletin.Sections)
@@ -523,15 +507,7 @@ func TestUnitMapper(t *testing.T) {
 					So(model.AboutTheData, ShouldEqual, false)
 					So(model.PreGTMJavaScript, ShouldNotBeEmpty)
 					So(len(model.PreGTMJavaScript), ShouldEqual, 1)
-					expectedPreGTMJs := template.JS("dataLayer.push({\n" +
-						"\t\t\t\"analyticsOptOut\": getUsageCookieValue(),\n" +
-						"\t\t\t\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"],\n" +
-						"\t\t\t\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"],\n" +
-						"\t\t\t\"contentTitle\": \"" + bulletin.Description.Title + "\",\n" +
-						"\t\t\t\"release-date-status\": \"" + bulletin.Description.ReleaseDate + "\",\n" +
-						"\t\t\t\"url\": \"" + bulletin.URI + "\",\n" +
-						"\t\t\t\"tag\": \"\"\n" +
-						"\t\t});")
+					expectedPreGTMJs := createPreGTMJs(bulletin.Description.Title, bulletin.Description.ReleaseDate, bulletin.URI, "")
 					So(model.PreGTMJavaScript[0], ShouldResemble, expectedPreGTMJs)
 					So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 					assertSections(model.Sections, bulletin.Sections)
@@ -663,15 +639,7 @@ func TestUnitMapper(t *testing.T) {
 					So(model.AboutTheData, ShouldEqual, false)
 					So(model.PreGTMJavaScript, ShouldNotBeEmpty)
 					So(len(model.PreGTMJavaScript), ShouldEqual, 1)
-					expectedPreGTMJs := template.JS("dataLayer.push({\n" +
-						"\t\t\t\"analyticsOptOut\": getUsageCookieValue(),\n" +
-						"\t\t\t\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"],\n" +
-						"\t\t\t\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"],\n" +
-						"\t\t\t\"contentTitle\": \"" + bulletin.Description.Title + "\",\n" +
-						"\t\t\t\"release-date-status\": \"" + bulletin.Description.ReleaseDate + "\",\n" +
-						"\t\t\t\"url\": \"" + bulletin.URI + "\",\n" +
-						"\t\t\t\"tag\": \"\"\n" +
-						"\t\t});")
+					expectedPreGTMJs := createPreGTMJs(bulletin.Description.Title, bulletin.Description.ReleaseDate, bulletin.URI, "")
 					So(model.PreGTMJavaScript[0], ShouldResemble, expectedPreGTMJs)
 					So(len(model.Sections), ShouldEqual, len(bulletin.Sections))
 					assertSections(model.Sections, bulletin.Sections)
@@ -837,4 +805,16 @@ func assertFigures(found []Figure, expected []zebedee.Figure) {
 		So(found[i].Filename, ShouldEqual, s.Filename)
 		So(found[i].Version, ShouldEqual, s.Version)
 	}
+}
+
+func createPreGTMJs(title, releaseDate, url, tag string) template.JS {
+	return template.JS("dataLayer.push({" +
+		"\"analyticsOptOut\": getUsageCookieValue()," +
+		"\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"]," +
+		"\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"]," +
+		"\"contentTitle\": \"" + title + "\"," +
+		"\"release-date-status\": \"" + releaseDate + "\"," +
+		"\"url\": \"" + url + "\"," +
+		"\"tag\": \"" + tag + "\"" +
+		"});")
 }
