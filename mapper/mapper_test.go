@@ -808,6 +808,17 @@ func assertFigures(found []Figure, expected []zebedee.Figure) {
 }
 
 func createPreGTMJs(title, releaseDate, url, tag string) template.JS {
+	if tag == "census" {
+		return template.JS("dataLayer.push({" +
+			"\"analyticsOptOut\": getUsageCookieValue()," +
+			"\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"]," +
+			"\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"]," +
+			"\"contentTitle\": \"" + title + "\"," +
+			"\"release-date-status\": \"" + releaseDate + "\"," +
+			"\"url\": \"" + url + "\"," +
+			"\"tag\": \"" + tag + "\"" +
+			"});")
+	}
 	return template.JS("dataLayer.push({" +
 		"\"analyticsOptOut\": getUsageCookieValue()," +
 		"\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"]," +
@@ -815,6 +826,5 @@ func createPreGTMJs(title, releaseDate, url, tag string) template.JS {
 		"\"contentTitle\": \"" + title + "\"," +
 		"\"release-date-status\": \"" + releaseDate + "\"," +
 		"\"url\": \"" + url + "\"," +
-		"\"tag\": \"" + tag + "\"" +
 		"});")
 }

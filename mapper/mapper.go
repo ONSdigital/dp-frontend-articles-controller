@@ -235,6 +235,17 @@ func createPreGTMJavaScript(title string, description BulletinModel) []template.
 	var censusTag string
 	if description.Census2021 {
 		censusTag = "census"
+		return []template.JS{
+			template.JS("dataLayer.push({" +
+				"\"analyticsOptOut\": getUsageCookieValue()," +
+				"\"gtm.whitelist\": [\"google\",\"hjtc\",\"lcl\"]," +
+				"\"gtm.blacklist\": [\"customScripts\",\"sp\",\"adm\",\"awct\",\"k\",\"d\",\"j\"]," +
+				"\"contentTitle\": \"" + title + "\"," +
+				"\"release-date-status\": \"" + description.ReleaseDate + "\"," +
+				"\"url\": \"" + description.URI + "\"," +
+				"\"tag\": \"" + censusTag + "\"" +
+				"});"),
+		}
 	}
 
 	return []template.JS{
@@ -245,7 +256,6 @@ func createPreGTMJavaScript(title string, description BulletinModel) []template.
 			"\"contentTitle\": \"" + title + "\"," +
 			"\"release-date-status\": \"" + description.ReleaseDate + "\"," +
 			"\"url\": \"" + description.URI + "\"," +
-			"\"tag\": \"" + censusTag + "\"" +
 			"});"),
 	}
 }
