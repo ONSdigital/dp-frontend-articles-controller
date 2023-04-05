@@ -5,8 +5,8 @@ go 1.17
 require (
 	github.com/ONSdigital/dp-api-clients-go/v2 v2.217.0
 	github.com/ONSdigital/dp-healthcheck v1.5.0
-	github.com/ONSdigital/dp-net v1.5.0
-	github.com/ONSdigital/dp-renderer v1.58.0
+	github.com/ONSdigital/dp-net/v2 v2.8.1
+	github.com/ONSdigital/dp-renderer v1.62.0
 	github.com/ONSdigital/log.go/v2 v2.3.0
 	github.com/golang/mock v1.6.0
 	github.com/gorilla/mux v1.8.0
@@ -17,7 +17,7 @@ require (
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/ONSdigital/dp-api-clients-go v1.43.0 // indirect
-	github.com/ONSdigital/dp-net/v2 v2.7.1 // indirect
+	github.com/ONSdigital/dp-net v1.5.0 // indirect
 	github.com/aws/aws-sdk-go v1.44.180 // indirect
 	github.com/c2h5oh/datasize v0.0.0-20220606134207-859f65c6625b // indirect
 	github.com/fatih/color v1.13.0 // indirect
@@ -34,11 +34,10 @@ require (
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.2.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/smartystreets/assertions v1.13.0 // indirect
 	github.com/unrolled/render v1.5.0 // indirect
-	golang.org/x/net v0.5.0 // indirect
-	golang.org/x/sys v0.4.0 // indirect
-	golang.org/x/text v0.6.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
 )
