@@ -1,3 +1,4 @@
+// Deprecated: This repository was archived in October 2024 as it is no longer in development
 module github.com/ONSdigital/dp-frontend-articles-controller
 
 go 1.17
